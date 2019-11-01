@@ -1,6 +1,87 @@
-/* This is an example of using Sass, otherwise plain CSS works too*/
-$primary-background: pink;
+@import '_variables';
+@import '_mixins.scss';
 
 body {
-  background-color: $primary-background;
+  background: linear-gradient(rgba(255, 255, 255, .1), rgba(255, 255, 255, 0.1)),
+  url("../images/login-background.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+header {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+h1 {
+  color: $login-text-color;
+  font-size: $main-header-font-size;
+  font-family: $hotel-name-font;
+  letter-spacing: 3px;
+  margin: 0 20px;
+}
+
+.silva-logo {
+  height: 125px;
+  width: 125px;
+}
+
+form {
+  font-family: $text-font;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  margin: 125px auto;
+}
+
+.login-input-section {
+  color: $login-text-color;
+  font-size: 1.5em;
+  letter-spacing: $letter-spacing;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.login-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.login-label {
+  margin-left: 13%;
+}
+
+
+.login-input {
+  font-size: 1em;
+  padding: 10px;
+  border-radius: 5px;
+  border: 0;
+  margin: 20px auto;
+  width: 70%;
+}
+
+.login-submit-button {
+  background-color: $login-text-color;
+  border-radius: 10px;
+  border: 0;
+  font-size: 1.5em;
+  margin: 30px;
+  width: 25%;
+  padding: 5px;
+  outline: 0;
+  color: $primary-background;
+  cursor: pointer;
+    &:hover {
+      background-color: $highlight-color;
+      transform: scale(1.1);
+    }
+    &:active {
+      box-shadow: 2px 5px black;
+      transform: translateY(2px);
+    }
 }
