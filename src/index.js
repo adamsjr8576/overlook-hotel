@@ -12,4 +12,20 @@ import './images/turing-logo.png'
 import './images/login-background.jpg'
 import './images/silva-logo.png'
 
-console.log('This is the JavaScript entry file - your code begins here.');
+$("#login-submit-button").click(login);
+
+function login() {
+  if($("#username-input").val() === 'manager'
+  && $("#password-input").val() === 'overlook2019') {
+    errorMessageHandling('hidden')
+    //manager html page shift
+  } else {
+    errorMessageHandling('visible');
+  }
+}
+
+function errorMessageHandling(show) {
+    $("#username-input").val('');
+    $("#password-input").val('');
+    $("#error-message").css('visibility', show);
+}
