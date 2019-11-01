@@ -16,10 +16,10 @@ function loginHandler() {
 function login(customerCheck) {
   if($("#username-input").val() === 'manager'
   && $("#password-input").val() === 'overlook2019') {
-    displayManagerPage()
+    window.location = "./manager-page.html";
   } else if (customerCheck.includes($("#username-input").val())
   && $("#password-input").val() === 'overlook2019') {
-    displayCustomerPage()
+    window.location = "./customer-page.html";
   } else {
     errorMessageHandling();
   }
@@ -37,32 +37,4 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
-}
-
-function displayManagerPage() {
-  $("body").html('');
-  $("body").html(
-    `<header>
-      <h1>Hotel</h1>
-      <img class="silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1>Silva</h1>
-    </header>
-    <main>
-      <h1>manager</h1>
-    </main>`
-  )
-}
-
-function displayCustomerPage() {
-  $("body").html('');
-  $("body").html(
-    `<header>
-      <h1>Hotel</h1>
-      <img class="silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1>Silva</h1>
-    </header>
-    <main>
-      <h1>customer</h1>
-    </main>`
-  )
 }
