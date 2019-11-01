@@ -1,13 +1,7 @@
-// This is the JavaScript entry file - your code begins here
-// Do not delete or rename this file ********
-
-// An example of how you import jQuery into a JS file if you use jQuery in that file
 import $ from 'jquery';
 
-// An example of how you tell webpack to use a CSS (SCSS) file
 import './css/base.scss';
 
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
 import './images/login-background.jpg'
 import './images/silva-logo.png'
@@ -22,21 +16,19 @@ function loginHandler() {
 function login(customerCheck) {
   if($("#username-input").val() === 'manager'
   && $("#password-input").val() === 'overlook2019') {
-    errorMessageHandling('hidden');
-    window.location = "./manager-deck.html";
+    displayManagerPage()
   } else if (customerCheck.includes($("#username-input").val())
   && $("#password-input").val() === 'overlook2019') {
-    errorMessageHandling('hidden');
-    window.location = "./customer-deck.html";
+    displayCustomerPage()
   } else {
-    errorMessageHandling('visible');
+    errorMessageHandling();
   }
 }
 
-function errorMessageHandling(show) {
+function errorMessageHandling() {
     $("#username-input").val('');
     $("#password-input").val('');
-    $("#error-message").css('visibility', show);
+    $("#error-message").css('visibility', 'visible');
 }
 
 function makeCustomerNameCheck() {
@@ -45,4 +37,32 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
+}
+
+function displayManagerPage() {
+  $("body").html('');
+  $("body").html(
+    `<header>
+      <h1>Hotel</h1>
+      <img class="silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+      <h1>Silva</h1>
+    </header>
+    <main>
+      <h1>manager</h1>
+    </main>`
+  )
+}
+
+function displayCustomerPage() {
+  $("body").html('');
+  $("body").html(
+    `<header>
+      <h1>Hotel</h1>
+      <img class="silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+      <h1>Silva</h1>
+    </header>
+    <main>
+      <h1>customer</h1>
+    </main>`
+  )
 }

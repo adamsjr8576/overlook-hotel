@@ -1,6 +1,19 @@
 @import '_variables';
 @import '_mixins.scss';
 
+.clearfix:after {
+    content: ' ';
+    display: table;
+    clear: both;
+}
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background: linear-gradient(rgba(255, 255, 255, .1), rgba(255, 255, 255, 0.1)),
   url("../images/login-background.jpg") no-repeat center center fixed;
