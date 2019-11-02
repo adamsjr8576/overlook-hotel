@@ -14,11 +14,8 @@
   padding: 0;
 }
 
-body {
-  background: linear-gradient(rgba(255, 255, 255, .1), rgba(255, 255, 255, 0.1)),
-  url("../images/login-background.jpg") no-repeat center center fixed;
-  background-size: cover;
-  font-family: $text-font;
+.login-page-body {
+  @include body-style("../images/login-background.jpg");
 }
 
 .login-page-header {
@@ -112,6 +109,16 @@ form {
 
 // MANAGER PAGE STYLING
 
+.user-page-body {
+  @include body-style("../images/login-background.jpg");
+}
+
+.manager-page-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .user-silva-logo {
   height: 75px;
   width: 75px;
@@ -167,4 +174,102 @@ form {
       box-shadow: 2px 5px black;
       transform: translateY(2px);
     }
+}
+
+.manager-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 45%;
+  margin-top: 25px;
+}
+
+.manager-section-article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $login-text-color;
+  border-radius: 10px;
+  width: 60%;
+}
+
+.manager-section-header {
+  padding: 5px;
+  text-align: center;
+  margin: 15px;
+  width: 90%;
+  border-bottom: 2px solid #283f42;
+}
+
+.user-booking-container {
+  height: 375px;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  width: 90%;
+  overflow: auto;
+}
+
+.user-info-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+}
+
+.user-info-button {
+  width: 75%;
+  padding: 5px;
+  font-size: $test-font-size;
+  border-radius: 10px;
+  background-color: $secondary-background-color;
+  color: $login-text-color;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  margin: 10px;
+    &:hover {
+      color: $highlight-color;
+      transform: scale(1.1);
+    }
+    &:active {
+      box-shadow: 2px 5px black;
+      transform: translateY(2px);
+    }
+}
+
+.user-info-article {
+  align-items: center;
+  width: 35%;
+  background-color: $login-text-color;
+  border-radius: 10px;
+  height: 200px;
+}
+
+.today-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 35%;
+}
+
+.today-info-article {
+  align-items: center;
+  width: 100%;
+  background-color: $login-text-color;
+  border-radius: 10px;
+  height: 200px;
+  margin: 30px 0;
+}
+
+.today-booking-container {
+  height: 425px;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  width: 90%;
+  overflow: auto;
+  margin: 20px;
+}
+
+.today-section-header {
+  margin-top: 15px;
 }

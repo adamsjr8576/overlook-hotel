@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Big+Shoulders+Display:700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body class="user-page-body">
     <header class="manager-page-header">
       <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
       <h1 class="manager-header-h1">Silva</h1>
@@ -14,8 +14,37 @@
       <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
       <button type="button" class="manager-header-logout" id="manager-header-logout">Logout</button>
     </header>
-    <main>
-      
+    <main class="manager-page-main">
+      <section class="manager-section">
+        <article class="manager-section-article">
+          <h2 class="manager-section-header">User Name</h2>
+          <div class="user-booking-container">
+          </div>
+          <div class="user-info-button-container">
+            <button type="button" class="user-info-button" id="user-amount-button">Customer Amount Spent</button>
+            <button type="button" class="user-info-button" id="user-book-button">Make Customer Booking</button>
+            <button type="button" class="user-info-button" id="user-delete-button">Delete Customer Booking</button>
+          </div>
+        </article>
+        <article class="user-info-article">
+          <p>user info</p>
+        </article>
+      </section>
+      <section class="manager-section">
+        <div class="today-info-container">
+          <article class="today-info-article">
+            <p>todays revenue</p>
+          </article>
+          <article class="today-info-article">
+            <p>todays book percentage</p>
+          </article>
+        </div>
+        <article class="manager-section-article">
+          <h2 class="today-section-header">November 2, 2019 Bookings</h2>
+          <div class="today-booking-container">
+          </div>
+        </article>
+      </section>
     </main>
   </body>
 </html>

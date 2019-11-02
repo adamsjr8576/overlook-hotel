@@ -5,6 +5,7 @@ import './css/base.scss';
 import './images/turing-logo.png'
 import './images/login-background.jpg'
 import './images/silva-logo.png'
+import './images/user-page.png'
 
 $("#login-submit-button").click(loginHandler);
 
