@@ -1,6 +1,29 @@
 @import '_variables';
 @import '_mixins.scss';
 
+%display-flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+%container-border {
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  width: 90%;
+  overflow: auto;
+}
+
+%button-hover {
+  color: $highlight-color;
+  transform: scale(1.1);
+}
+
+%button-active {
+  box-shadow: 2px 5px black;
+  transform: translateY(2px);
+}
+
 .clearfix:after {
     content: ' ';
     display: table;
@@ -40,9 +63,7 @@ h1 {
 
 form {
   font-family: $text-font;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @extend %display-flex-column;
   width: 60%;
   margin: 125px auto;
 }
@@ -89,12 +110,10 @@ form {
   color: $primary-background;
   cursor: pointer;
     &:hover {
-      background-color: $highlight-color;
-      transform: scale(1.1);
+      @extend %button-hover;
     }
     &:active {
-      box-shadow: 2px 5px black;
-      transform: translateY(2px);
+      @extend %button-active;
     }
 }
 
@@ -156,23 +175,12 @@ form {
 }
 
 .manager-header-logout {
-  width: 10%;
-  padding: 5px;
-  font-size: $test-font-size;
-  border-radius: 10px;
-  background-color: $secondary-background-color;
-  color: $login-text-color;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-  margin-right: 40px;
+  @include users-page-button(10%, 0 40px 0 0)
     &:hover {
-      color: $highlight-color;
-      transform: scale(1.1);
+      @extend %button-hover;
     }
     &:active {
-      box-shadow: 2px 5px black;
-      transform: translateY(2px);
+      @extend %button-active;
     }
 }
 
@@ -185,12 +193,8 @@ form {
 }
 
 .manager-section-article {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $login-text-color;
-  border-radius: 10px;
-  width: 60%;
+  @extend %display-flex-column;
+  @include section-style(60%);
 }
 
 .manager-section-header {
@@ -203,30 +207,16 @@ form {
 
 .user-booking-container {
   height: 375px;
-  border: 2px solid #283f42;
-  border-radius: 10px;
-  width: 90%;
-  overflow: auto;
+  @extend %container-border;
 }
 
 .user-info-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @extend %display-flex-column;
   width: 90%;
 }
 
 .user-info-button {
-  width: 75%;
-  padding: 5px;
-  font-size: $test-font-size;
-  border-radius: 10px;
-  background-color: $secondary-background-color;
-  color: $login-text-color;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-  margin: 10px;
+  @include users-page-button(75%, 10px);
     &:hover {
       color: $highlight-color;
       transform: scale(1.1);
@@ -239,34 +229,25 @@ form {
 
 .user-info-article {
   align-items: center;
-  width: 35%;
-  background-color: $login-text-color;
-  border-radius: 10px;
+  @include section-style(35%);
   height: 200px;
 }
 
 .today-info-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @extend %display-flex-column;
   width: 35%;
 }
 
 .today-info-article {
   align-items: center;
-  width: 100%;
-  background-color: $login-text-color;
-  border-radius: 10px;
+  @include section-style(100%);
   height: 200px;
   margin: 30px 0;
 }
 
 .today-booking-container {
   height: 425px;
-  border: 2px solid #283f42;
-  border-radius: 10px;
-  width: 90%;
-  overflow: auto;
+  @extend %container-border;
   margin: 20px;
 }
 
@@ -278,12 +259,8 @@ form {
 
 .customer-availability-section {
   margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 38%;
-  background-color: $login-text-color;
-  border-radius: 10px;
+  @extend %display-flex-column;
+  @include section-style(38%);
 }
 
 .customer-section-header {
@@ -296,10 +273,7 @@ form {
 
 .customer-availability-container {
   height: 425px;
-  border: 2px solid #283f42;
-  border-radius: 10px;
-  width: 90%;
-  overflow: auto;
+  @extend %container-border;
   margin: 20px 0;
 }
 
@@ -310,19 +284,13 @@ form {
 
 .customer-book-section {
   margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @extend %display-flex-column;
   width: 28%;
 }
 
 .customer-filter-room-article {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $login-text-color;
-  border-radius: 10px;
-  width: 75%;
+  @extend %display-flex-column;
+  @include section-style(75%);
   margin: 30px 0;
 }
 
@@ -331,33 +299,22 @@ form {
 }
 
 .customer-select-room-article {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $login-text-color;
-  border-radius: 10px;
-  width: 75%;
+  @extend %display-flex-column;
+  @include section-style(75%);
   margin: 30px 0;
 }
 
 .customer-selection-container{
   height: 200px;
-  border: 2px solid #283f42;
-  border-radius: 10px;
-  width: 90%;
-  overflow: auto;
+  @extend %container-border;
   margin: 20px 0;
 }
 
 .customer-info-section {
   margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @extend %display-flex-column;
   justify-content: space-between;
-  width: 28%;
-  background-color: $login-text-color;
-  border-radius: 10px;
+  @include section-style(28%);
 }
 
 .customer-amount-spent {
