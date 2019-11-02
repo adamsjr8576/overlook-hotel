@@ -113,7 +113,7 @@ form {
   @include body-style("../images/login-background.jpg");
 }
 
-.manager-page-main {
+.user-page-main {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -125,7 +125,7 @@ form {
   margin-left: 20px;
 }
 
-.manager-page-header {
+.user-page-header {
   margin-top: 10px;
   display: flex;
   align-items: center;
@@ -277,13 +277,94 @@ form {
 // CUSTOMER PAGE STYLING
 
 .customer-availability-section {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 38%;
+  background-color: $login-text-color;
+  border-radius: 10px;
+}
 
+.customer-section-header {
+  text-align: center;
+  margin: 10px 0;
+  width: 90%;
+  padding: 10px;
+  border-bottom: 2px solid #283f42;
+}
+
+.customer-availability-container {
+  height: 425px;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  width: 90%;
+  overflow: auto;
+  margin: 20px 0;
+}
+
+.customer-availability-date {
+  font-size: $sub-header-font-size;
+  text-align: center;
 }
 
 .customer-book-section {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 28%;
+}
 
+.customer-filter-room-article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $login-text-color;
+  border-radius: 10px;
+  width: 75%;
+  margin: 30px 0;
+}
+
+.customer-filter-input {
+  margin: 20px 0;
+}
+
+.customer-select-room-article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $login-text-color;
+  border-radius: 10px;
+  width: 75%;
+  margin: 30px 0;
+}
+
+.customer-selection-container{
+  height: 200px;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  width: 90%;
+  overflow: auto;
+  margin: 20px 0;
 }
 
 .customer-info-section {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 28%;
+  background-color: $login-text-color;
+  border-radius: 10px;
+}
 
+.customer-amount-spent {
+  font-size: $test-font-size;
+  margin-bottom: 15px;
+}
+
+.dollars-spent {
+  font-size: $sub-header-font-size;
 }
