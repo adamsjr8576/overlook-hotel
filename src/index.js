@@ -7,7 +7,8 @@ import './images/login-background.jpg'
 import './images/silva-logo.png'
 import './images/user-page.png'
 
-$("#login-submit-button").click(loginHandler);
+$("#login-submit-button").on('click', loginHandler);
+$("#user-header-logout").on('click', logout);
 
 function loginHandler() {
   let customerCheck = makeCustomerNameCheck();
@@ -24,6 +25,10 @@ function login(customerCheck) {
   } else {
     errorMessageHandling();
   }
+}
+
+function logout() {
+  window.location = "./index.html";
 }
 
 function errorMessageHandling() {

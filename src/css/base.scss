@@ -174,7 +174,7 @@ form {
   text-align: center;
 }
 
-.manager-header-logout {
+.user-header-logout {
   @include users-page-button(10%, 0 40px 0 0)
     &:hover {
       @extend %button-hover;
