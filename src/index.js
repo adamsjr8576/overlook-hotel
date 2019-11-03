@@ -21,6 +21,8 @@ $("body").on('click', "#user-header-logout", addloginHTML);
 $("body").on('click', "#login-submit-button", loginHandler);
 $("body").on('change', "#datepicker", roomsAvailableHandler);
 $("body").on('click', "#customer-filter-form", filterRoomsHandler);
+$("body").on('click', "#customer-room-available", displayRoomSelected);
+$("body").on('click', "#cancel-room-selection", cancelRoomSelected);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -47,16 +49,16 @@ function formatDate(date) {
   return year + '/' + monthNames[monthIndex] + '/' + day;
 }
 
-  const date = formatDate(new Date());
-	const dateObject = new Date(date);
-	const options = {
-		weekday: 'long',
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	}
+const date = formatDate(new Date());
+const dateObject = new Date(date);
+const options = {
+	weekday: 'long',
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric'
+}
 
-	const formattedDate = dateObject.toLocaleString('en', options);
+const formattedDate = dateObject.toLocaleString('en', options);
 
 function getData(type, dataName) {
   const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
@@ -64,11 +66,6 @@ function getData(type, dataName) {
   const promise = fetch(url)
   .then(response => response.json())
   return promise;
-}
-
-function loginHandler() {
-  let customerCheck = makeCustomerNameCheck();
-  login(customerCheck);
 }
 
 function login(customerCheck) {
@@ -83,6 +80,11 @@ function login(customerCheck) {
   }
 }
 
+function loginHandler() {
+  let customerCheck = makeCustomerNameCheck();
+  login(customerCheck);
+}
+
 function filterRoomsHandler() {
   let info = filterRoomsAvailable();
   displaySelectedDate(info.date);
@@ -92,7 +94,6 @@ function filterRoomsHandler() {
 function roomsAvailableHandler() {
   let info = addAvailableRoomsCustomer();
   displaySelectedDate(info.date);
-  // handleErrorsForFilter(info.rooms)
 }
 
 function customerPageHandler() {
@@ -118,18 +119,18 @@ function managerPageHandler(date) {
     `)
 }
 
+function errorMessageHandling() {
+    $("#username-input").val('');
+    $("#password-input").val('');
+    $("#error-message").css('visibility', 'visible');
+}
+
 function instantiateCustomer(id) {
   customer = new Customer(usersData, bookingsData, roomsData, id);
 }
 
 function instantiateManager() {
   manager = new Manager(usersData, bookingsData, roomsData);
-}
-
-function errorMessageHandling() {
-    $("#username-input").val('');
-    $("#password-input").val('');
-    $("#error-message").css('visibility', 'visible');
 }
 
 function makeCustomerNameCheck() {
@@ -144,7 +145,7 @@ function addUserRoomBookings(id) {
   let bookings = customer.getUserAllBookings(id);
   bookings.forEach(booking => {
     $("#customer-bookings").append(`
-    <section class="availability-section">
+    <section class="booking-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${booking.roomNumber}</p>
       </div>
@@ -160,7 +161,7 @@ function addUserRoomBookings(id) {
 function addTodaysAvailability(date) {
   let availability = manager.getRoomsAvailableDay(date);
   availability.forEach(room => {
-    $("#today-availability").append(`<section class="availability-section">
+    $("#today-availability").append(`<section class="manager-availability-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${room.number}</p>
       </div>
@@ -186,13 +187,6 @@ function clearSearch(roomType) {
     addAvailableRoomsCustomer();
   }
 }
-//
-// function handleErrorsForFilter(rooms) {
-//   if (rooms.length === 0) {
-//     $("#customer-availability-container").html(`<p>I am soooooo very sorry that no rooms
-//     are currently available within your selected criteria</p>`);
-//   }
-// }
 
 function filterRoomsAvailable() {
   let roomType = $('input[name="roomType"]:checked').val();
@@ -250,6 +244,16 @@ function addDatePicker() {
   flatpickr("#datepicker", {
     dateFormat: "Y/m/d"
   });
+}
+
+function cancelRoomSelected() {
+  $("#customer-availability-container").append($("#customer-selection-container").children());
+}
+
+function displayRoomSelected() {
+  if ($("#customer-selection-container").html().length === 9) {
+    $("#customer-selection-container").append(this);
+  }
 }
 
 function addloginHTML() {
@@ -353,9 +357,10 @@ function addCustomerHTML() {
       </article>
       <article class="customer-select-room-article">
         <h2 class="customer-section-header">Selected Room</h2>
-        <div class="customer-selection-container">
+        <div class="customer-selection-container" id="customer-selection-container">
         </div>
         <button class="user-info-button" type="button">BOOK NOW</button>
+        <button class="user-info-button" type="button" id="cancel-room-selection">cancel</button>
       </article>
     </section>
     <section class="customer-info-section">

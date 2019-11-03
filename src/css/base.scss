@@ -25,6 +25,15 @@
   transform: translateY(2px);
 }
 
+%room-list-style {
+  @extend %display-flex-column;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  padding: 10px;
+  width: 95%;
+  margin: 5px 0;
+}
+
 .clearfix:after {
     content: ' ';
     display: table;
@@ -111,7 +120,7 @@ form {
   color: $primary-background;
   cursor: pointer;
     &:hover {
-      @extend %button-hover;
+      transform: scale(1.1);
     }
     &:active {
       @extend %button-active;
@@ -307,7 +316,7 @@ form {
 .customer-filter-room-article {
   @extend %display-flex-column;
   @include section-style(75%);
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
 .customer-filter-input {
@@ -329,13 +338,13 @@ form {
 .customer-select-room-article {
   @extend %display-flex-column;
   @include section-style(75%);
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
 .customer-selection-container{
-  height: 100px;
+  @extend %display-flex-column;
+  height: 140px;
   @extend %container-border;
-  margin: 20px 0;
 }
 
 .customer-info-section {
@@ -357,15 +366,29 @@ form {
   margin: 10px 0;
 }
 
+.manager-availability-section {
+  @extend %room-list-style;
+  &:hover {
+    background-color: white;
+  }
+}
+
+.booking-section {
+  @extend %room-list-style;
+  &:hover {
+    background-color: white;
+  }
+}
+
 .availability-section {
-  @extend %display-flex-column;
-  border: 2px solid #283f42;
-  border-radius: 10px;
-  padding: 10px;
-  width: 95%;
-  margin: 5px 0;
+  @extend %room-list-style;
+  cursor: pointer;
     &:hover {
       background-color: white;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+    &:active {
+      transform: scale(.9);
     }
 }
 
