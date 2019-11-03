@@ -1,0 +1,42 @@
+class User {
+  constructor(users, bookings, rooms, id) {
+    this.bookings = bookings.bookings;
+    this.rooms = rooms.rooms;
+  }
+
+  getUserInfo(users, id) {
+    let newUser = users.find(user => user.id === id);
+    this.user = newUser;
+    return newUser;
+  }
+
+  getRoomsAvailableDay(date) {
+    let roomsBooked = this.bookings.filter(booking => booking.date === date)
+    .map(booking => booking = booking.roomNumber);
+    return this.rooms.filter(room => {
+      return !roomsBooked.includes(room.number);
+    });
+  }
+
+  getUserAllBookings(id) {
+    return this.bookings.filter(booking => booking.userID === id);
+  }
+
+  getUserTotalSpent(id) {
+    let roomsBooked = this.getUserAllBookings(id).map(booking => booking = booking.roomNumber);
+    let amountSpent = this.rooms.reduce((totalCost, room) => {
+      if (roomsBooked.includes(room.number)) {
+        totalCost += room.costPerNight;
+      }
+      return totalCost;
+    }, 0);
+    return Math.round(amountSpent);
+  }
+
+  bookUserRoom() {
+
+  }
+
+}
+
+export default User;
