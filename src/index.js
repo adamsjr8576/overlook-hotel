@@ -8,6 +8,7 @@ import './images/silva-logo.png'
 import './images/user-page.png'
 import Customer from './Customer'
 import Manager from './Manager'
+import flatpickr from "flatpickr";
 
 let usersData;
 let roomsData;
@@ -18,6 +19,7 @@ let id;
 
 $("body").on('click', "#user-header-logout", addloginHTML);
 $("body").on('click', "#login-submit-button", loginHandler);
+// $("body").on('keyup', "#datepicker", );
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -85,7 +87,8 @@ function customerPageHandler() {
   addCustomerHTML();
   instantiateCustomer(id);
   addUserRoomBookings(id);
-  $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`)
+  $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+  addDatePicker();
 }
 
 function managerPageHandler(date) {
@@ -168,6 +171,12 @@ function addTodaysAvailability(date) {
     `)
 }
 
+function addDatePicker() {
+  flatpickr("#datepicker", {
+    dateFormat: "Y/m/d"
+  });
+}
+
 function addloginHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
@@ -245,7 +254,7 @@ function addCustomerHTML() {
     <header class="user-page-header">
       <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
       <h1 class="manager-header-h1">Silva</h1>
-      <input class="manager-user-search" type="date" id="user-names-input" list="user-names" placeholder="Select Date" >
+      <input class="manager-user-search" id="datepicker" placeholder="Select Date" />
       <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
       <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
     </header>

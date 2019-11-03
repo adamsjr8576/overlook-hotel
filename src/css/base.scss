@@ -1,5 +1,6 @@
 @import '_variables';
 @import '_mixins.scss';
+@import '~flatpickr/dist/flatpickr.css';
 
 %display-flex-column {
   display: flex;
