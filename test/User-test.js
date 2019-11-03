@@ -335,4 +335,8 @@ describe('User', () => {
     roomNumber: 5,
     roomServiceCharges: [] } ]);
   });
+
+  it('should be able to get the total cost of rooms booked for any user', function() {
+    expect(user.getTotalSpent()).to.equal(340.17);
+  });
 });
