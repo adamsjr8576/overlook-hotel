@@ -6,7 +6,7 @@ class User {
 
   getUserInfo(users, id) {
     let newUser = users.find(user => user.id === id);
-    this.user = newUser;
+    this.userSelected = newUser;
     return newUser;
   }
 
