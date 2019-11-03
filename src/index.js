@@ -206,7 +206,7 @@ function addManagerHTML() {
           </article>
         </div>
         <article class="manager-section-article">
-          <h2 class="today-section-header">${formattedDate}</h2>
+          <h2 class="today-section-header">Current Availability</h2>
           <div class="today-booking-container" id="today-availability">
           </div>
         </article>
