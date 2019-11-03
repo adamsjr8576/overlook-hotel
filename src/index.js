@@ -97,7 +97,14 @@ function managerPageHandler(date) {
   addManagerHTML();
   instantiateManager();
   addTodaysAvailability(date);
-  $("#manager-header-date").text(formattedDate);
+  $("#today-revenue").html(`
+    <p class="manager-today-p">Revenue</p>
+    <p class="manager-today">$${manager.getRevenueToday(date)}<p>
+    `);
+  $("#today-percentage").html(`
+    <p class="manager-today-p">Percentage Booked</p>
+    <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
+    `)
 }
 
 function errorMessageHandling() {
@@ -112,10 +119,6 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
-}
-
-function addTodaysRevenue() {
-  
 }
 
 function addTodaysAvailability(date) {
@@ -176,7 +179,7 @@ function addManagerHTML() {
       <h1 class="manager-header-h1">Silva</h1>
       <input class="manager-user-search" type="text" id="user-names-input" list="user-names" placeholder="User Name Search" >
       <datalist id="user-names"></datalist>
-      <h3 class="manager-header-date" id="manager-header-date"></h3>
+      <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
       <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
     </header>
     <main class="user-page-main">
@@ -197,15 +200,13 @@ function addManagerHTML() {
       </section>
       <section class="manager-section">
         <div class="today-info-container">
-          <article class="today-info-article">
-            <p>todays revenue</p>
+          <article class="today-info-article" id="today-revenue">
           </article>
-          <article class="today-info-article">
-            <p>todays book percentage</p>
+          <article class="today-info-article" id="today-percentage">
           </article>
         </div>
         <article class="manager-section-article">
-          <h2 class="today-section-header">November 2, 2019 Availability</h2>
+          <h2 class="today-section-header">${formattedDate}</h2>
           <div class="today-booking-container" id="today-availability">
           </div>
         </article>
