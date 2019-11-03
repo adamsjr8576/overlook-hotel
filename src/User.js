@@ -1,12 +1,12 @@
 class User {
   constructor(users, bookings, rooms, id) {
-    this.bookings = bookings;
-    this.rooms = rooms;
+    this.bookings = bookings.bookings;
+    this.rooms = rooms.rooms;
   }
 
   getUserInfo(users, id) {
     let newUser = users.find(user => user.id === id);
-    this.userSelected = newUser;
+    this.user = newUser;
     return newUser;
   }
 

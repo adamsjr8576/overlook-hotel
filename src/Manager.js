@@ -3,7 +3,7 @@ import User from '../src/User';
 class Manager extends User {
   constructor(users, bookings, rooms, id) {
     super(users, bookings, rooms, id);
-    this.userSelected = null;
+    this.user = null;
   }
 
   getRevenueToday(date) {

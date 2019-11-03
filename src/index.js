@@ -12,12 +12,12 @@ import Manager from './Manager'
 let usersData;
 let roomsData;
 let bookingsData;
-let users;
-let rooms;
-let bookings;
+let customer;
+let manager;
+let id;
+
 $("body").on('click', "#user-header-logout", addloginHTML);
 $("body").on('click', "#login-submit-button", loginHandler);
-getDataOnUserPageLoad();
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -28,10 +28,40 @@ Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
   roomsData = promise[1];
   bookingsData = promise[2];
 }).then(data => {
-  console.log(bookingsData.bookings)
-  // users = new User()
+  usersData = usersData.users;
 });
 
+function formatDate(date) {
+  var monthNames = [
+    "1", "2", "3",
+    "4", "5", "6", "7",
+    "8", "9", "10",
+    "11", "12"
+  ];
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+  return year + '/' + monthNames[monthIndex] + '/' + day;
+}
+
+  const date = formatDate(new Date());
+	const dateObject = new Date(date);
+	const options = {
+		weekday: 'long',
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	}
+
+	const formattedDate = dateObject.toLocaleString('en', options);
+
+function instantiateCustomer(id) {
+  customer = new Customer(usersData, bookingsData, roomsData, id);
+}
+
+function instantiateManager() {
+  manager = new Manager(usersData, bookingsData, roomsData);
+}
 
 function getData(type, dataName) {
   const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
@@ -45,16 +75,29 @@ function loginHandler() {
   let customerCheck = makeCustomerNameCheck();
   login(customerCheck);
 }
+
 function login(customerCheck) {
   if($("#username-input").val() === 'manager'
   && $("#password-input").val() === 'overlook2019') {
-    addManagerHTML();
+    managerPageHandler(date)
+    // addManagerHTML();
+    // instantiateManager();
+    // addTodaysAvailability(date)
   } else if (customerCheck.includes($("#username-input").val())
   && $("#password-input").val() === 'overlook2019') {
+    id = Number($("#username-input").val().split('r')[1]);
     addCustomerHTML();
+    instantiateCustomer(id);
   } else {
     errorMessageHandling();
   }
+}
+
+function managerPageHandler(date) {
+  addManagerHTML();
+  instantiateManager();
+  addTodaysAvailability(date);
+  $("#manager-header-date").text(formattedDate);
 }
 
 function errorMessageHandling() {
@@ -69,6 +112,33 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
+}
+
+function addTodaysRevenue() {
+  
+}
+
+function addTodaysAvailability(date) {
+  let availability = manager.getRoomsAvailableDay(date);
+  let htmlToEnter = ''
+  availability.forEach(room => {
+    htmlToEnter += `
+    <section class="availability-section">
+      <div class="availability-room-num">
+      <p class="availability-room-p">Room ${room.number}</p>
+      </div>
+      <div class="availability-room-info">
+      <p>Room Type: ${room.roomType}</p>
+      <p>Bed Size: ${room.bedSize}</p>
+      <p>Number of Beds: ${room.numBeds}</p>
+      <p>Cost Per Night: ${room.costPerNight}</p>
+      </div>
+    </section>
+    `
+  });
+  $("#today-availability").html(`
+    ${htmlToEnter}
+    `)
 }
 
 function addloginHTML() {
@@ -106,7 +176,7 @@ function addManagerHTML() {
       <h1 class="manager-header-h1">Silva</h1>
       <input class="manager-user-search" type="text" id="user-names-input" list="user-names" placeholder="User Name Search" >
       <datalist id="user-names"></datalist>
-      <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
+      <h3 class="manager-header-date" id="manager-header-date"></h3>
       <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
     </header>
     <main class="user-page-main">
@@ -135,8 +205,8 @@ function addManagerHTML() {
           </article>
         </div>
         <article class="manager-section-article">
-          <h2 class="today-section-header">November 2, 2019 Bookings</h2>
-          <div class="today-booking-container">
+          <h2 class="today-section-header">November 2, 2019 Availability</h2>
+          <div class="today-booking-container" id="today-availability">
           </div>
         </article>
       </section>

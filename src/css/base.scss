@@ -246,6 +246,7 @@ form {
 }
 
 .today-booking-container {
+  @extend %display-flex-column;
   height: 425px;
   @extend %container-border;
   margin: 20px;
@@ -324,4 +325,31 @@ form {
 
 .dollars-spent {
   font-size: $sub-header-font-size;
+}
+
+.availability-section {
+  @extend %display-flex-column;
+  border: 2px solid #283f42;
+  border-radius: 10px;
+  padding: 10px;
+  width: 95%;
+  margin: 5px 0;
+    &:hover {
+      background-color: white;
+    }
+}
+
+.availability-room-num {
+  width: 85%;
+  border-bottom: 2px solid #283f42;
+}
+
+.availability-room-p {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.availability-room-info {
+  @extend %display-flex-column;
+  width: 75%;
 }
