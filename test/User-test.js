@@ -327,4 +327,12 @@ describe('User', () => {
     numBeds: 1,
     costPerNight: 497.64 } ]);
   });
+
+  it('should be able to get all bookings for any user', function() {
+    expect(user.getUserAllBookings(1)).to.deep.equal([ { id: 1572293130160,
+    userID: 1,
+    date: '2019/11/18',
+    roomNumber: 5,
+    roomServiceCharges: [] } ]);
+  });
 });

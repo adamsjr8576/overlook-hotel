@@ -18,8 +18,8 @@ class User {
     });
   }
 
-  getAllBookings() {
-
+  getUserAllBookings(id) {
+    return this.bookings.filter(booking => booking.userID === id);
   }
 
   getTotalSpent() {
