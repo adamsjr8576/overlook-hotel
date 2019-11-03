@@ -19,12 +19,12 @@ describe('Manager', () => {
   });
 
   it('should have the user info equal null as a default property', function() {
-    expect(manager.userSelected).to.equal(null);
+    expect(manager.user).to.equal(null);
   });
 
   it('should be able to find the user info for any user', function() {
     manager.getUserInfo(usersData, 2);
-    expect(manager.userSelected).to.deep.equal({
+    expect(manager.user).to.deep.equal({
       id: 2,
       name: "Rocio Schuster"
     });

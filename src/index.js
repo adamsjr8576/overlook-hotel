@@ -55,14 +55,6 @@ function formatDate(date) {
 
 	const formattedDate = dateObject.toLocaleString('en', options);
 
-function instantiateCustomer(id) {
-  customer = new Customer(usersData, bookingsData, roomsData, id);
-}
-
-function instantiateManager() {
-  manager = new Manager(usersData, bookingsData, roomsData);
-}
-
 function getData(type, dataName) {
   const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
   const url = `${root}${type}`;
@@ -108,6 +100,14 @@ function managerPageHandler(date) {
     <p class="manager-today-p">Percentage Booked</p>
     <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
     `)
+}
+
+function instantiateCustomer(id) {
+  customer = new Customer(usersData, bookingsData, roomsData, id);
+}
+
+function instantiateManager() {
+  manager = new Manager(usersData, bookingsData, roomsData);
 }
 
 function errorMessageHandling() {

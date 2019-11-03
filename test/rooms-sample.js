@@ -1,4 +1,5 @@
-const roomsData = [
+const roomsData = {
+  rooms: [
   {
     number: 1,
     roomType: "residential suite",
@@ -79,6 +80,6 @@ const roomsData = [
     numBeds: 1,
     costPerNight: 497.64
   }
-]
+]}
 
 export default roomsData;

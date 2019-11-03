@@ -337,6 +337,6 @@ describe('User', () => {
   });
 
   it('should be able to get the total cost of rooms booked for any user', function() {
-    expect(user.getUserTotalSpent()).to.equal(340.17);
+    expect(user.getUserTotalSpent(1)).to.equal(340);
   });
 });
