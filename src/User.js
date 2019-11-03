@@ -22,14 +22,15 @@ class User {
     return this.bookings.filter(booking => booking.userID === id);
   }
 
-  getUserTotalSpent() {
-    let roomsBooked = this.getUserAllBookings(1).map(booking => booking = booking.roomNumber);
-    return this.rooms.reduce((totalCost, room) => {
+  getUserTotalSpent(id) {
+    let roomsBooked = this.getUserAllBookings(id).map(booking => booking = booking.roomNumber);
+    let amountSpent = this.rooms.reduce((totalCost, room) => {
       if (roomsBooked.includes(room.number)) {
         totalCost += room.costPerNight;
       }
       return totalCost;
     }, 0);
+    return Math.round(amountSpent);
   }
 
   bookUserRoom() {

@@ -80,17 +80,20 @@ function login(customerCheck) {
   if($("#username-input").val() === 'manager'
   && $("#password-input").val() === 'overlook2019') {
     managerPageHandler(date)
-    // addManagerHTML();
-    // instantiateManager();
-    // addTodaysAvailability(date)
   } else if (customerCheck.includes($("#username-input").val())
   && $("#password-input").val() === 'overlook2019') {
-    id = Number($("#username-input").val().split('r')[1]);
-    addCustomerHTML();
-    instantiateCustomer(id);
+    customerPageHandler();
   } else {
     errorMessageHandling();
   }
+}
+
+function customerPageHandler() {
+  id = Number($("#username-input").val().split('r')[1]);
+  addCustomerHTML();
+  instantiateCustomer(id);
+  addUserRoomBookings(id);
+  $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`)
 }
 
 function managerPageHandler(date) {
@@ -119,6 +122,27 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
+}
+
+function addUserRoomBookings(id) {
+  let bookings = customer.getUserAllBookings(id);
+  let htmlToEnter = ''
+  bookings.forEach(booking => {
+    htmlToEnter += `
+    <section class="availability-section">
+      <div class="availability-room-num">
+      <p class="availability-room-p">Room ${booking.roomNumber}</p>
+      </div>
+      <div class="availability-room-info">
+      <p>Booking Date: ${booking.date}</p>
+      <p>Confirmation #: ${booking.id}</p>
+      </div>
+    </section>
+    `
+  });
+  $("#customer-bookings").html(`
+    ${htmlToEnter}
+    `)
 }
 
 function addTodaysAvailability(date) {
@@ -246,9 +270,10 @@ function addCustomerHTML() {
     </section>
     <section class="customer-info-section">
       <h2 class="today-section-header">User Bookings</h2>
-      <div class="customer-availability-container">
+      <div class="customer-availability-container" id="customer-bookings">
       </div>
-      <p class="customer-amount-spent">Amount Spent: <span class="dollars-spent" id="dollars-spent">$$$</span></p>
+      <p class="customer-amount-spent">Total Spent</p>
+      <p class="dollars-spent" id="dollars-spent"></p>
     </section>
   </main>
     `)

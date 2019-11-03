@@ -286,6 +286,7 @@ form {
 }
 
 .customer-availability-container {
+  @extend %display-flex-column;
   height: 425px;
   @extend %container-border;
   margin: 20px 0;
@@ -332,12 +333,15 @@ form {
 }
 
 .customer-amount-spent {
+  text-align: center;
   font-size: $test-font-size;
-  margin-bottom: 15px;
+  width: 80%;
+  border-bottom: 2px solid #283f42;
 }
 
 .dollars-spent {
   font-size: $sub-header-font-size;
+  margin: 10px 0;
 }
 
 .availability-section {
@@ -363,6 +367,7 @@ form {
 }
 
 .availability-room-info {
+  text-align: center;
   @extend %display-flex-column;
   width: 75%;
 }
