@@ -24,4 +24,15 @@ describe('User', () => {
       name: "Leatha Ullrich"
     });
   });
+
+  it('should be able to filter rooms available by type', function() {
+    expect(customer.filterRoomsAvailable("2019/11/22", "junior suite")).to.deep.equal([{
+      number: 6,
+      roomType: "junior suite",
+      bidet: true,
+      bedSize: "queen",
+      numBeds: 1,
+      costPerNight: 397.02
+    }]);
+  });
 });

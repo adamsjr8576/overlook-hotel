@@ -19,7 +19,8 @@ let id;
 
 $("body").on('click', "#user-header-logout", addloginHTML);
 $("body").on('click', "#login-submit-button", loginHandler);
-// $("body").on('keyup', "#datepicker", );
+$("body").on('change', "#datepicker", roomsAvailableHandler);
+$("body").on('click', "#customer-filter-form", filterRoomsHandler);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -82,6 +83,18 @@ function login(customerCheck) {
   }
 }
 
+function filterRoomsHandler() {
+  let info = filterRoomsAvailable();
+  displaySelectedDate(info.date);
+  clearSearch(info.roomType);
+}
+
+function roomsAvailableHandler() {
+  let info = addAvailableRoomsCustomer();
+  displaySelectedDate(info.date);
+  // handleErrorsForFilter(info.rooms)
+}
+
 function customerPageHandler() {
   id = Number($("#username-input").val().split('r')[1]);
   addCustomerHTML();
@@ -129,9 +142,8 @@ function makeCustomerNameCheck() {
 
 function addUserRoomBookings(id) {
   let bookings = customer.getUserAllBookings(id);
-  let htmlToEnter = ''
   bookings.forEach(booking => {
-    htmlToEnter += `
+    $("#customer-bookings").append(`
     <section class="availability-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${booking.roomNumber}</p>
@@ -141,19 +153,14 @@ function addUserRoomBookings(id) {
       <p>Confirmation #: ${booking.id}</p>
       </div>
     </section>
-    `
+    `);
   });
-  $("#customer-bookings").html(`
-    ${htmlToEnter}
-    `)
 }
 
 function addTodaysAvailability(date) {
   let availability = manager.getRoomsAvailableDay(date);
-  let htmlToEnter = ''
   availability.forEach(room => {
-    htmlToEnter += `
-    <section class="availability-section">
+    $("#today-availability").append(`<section class="availability-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${room.number}</p>
       </div>
@@ -164,11 +171,79 @@ function addTodaysAvailability(date) {
       <p>Cost Per Night: ${room.costPerNight}</p>
       </div>
     </section>
-    `
-  });
-  $("#today-availability").html(`
-    ${htmlToEnter}
     `)
+  });
+}
+
+function displaySelectedDate(date) {
+  let dateObject = new Date(date);
+  let formatDate = dateObject.toLocaleString('en', options);
+  $("#customer-availability-date").text(formatDate);
+}
+
+function clearSearch(roomType) {
+  if (roomType === 'clear') {
+    addAvailableRoomsCustomer();
+  }
+}
+//
+// function handleErrorsForFilter(rooms) {
+//   if (rooms.length === 0) {
+//     $("#customer-availability-container").html(`<p>I am soooooo very sorry that no rooms
+//     are currently available within your selected criteria</p>`);
+//   }
+// }
+
+function filterRoomsAvailable() {
+  let roomType = $('input[name="roomType"]:checked').val();
+  let date = $("#datepicker").val();
+  let filteredRooms = customer.filterRoomsAvailable(date, roomType);
+  if (filteredRooms.length > 0) {
+    $("#customer-availability-container").empty();
+    addAvailableRoomsToDOM(filteredRooms);
+  } else {
+    $("#customer-availability-container").html(`<p>I am soooooo very sorry that no rooms
+    are currently available within your selected criteria</p>`);
+  }
+  return {
+    roomType: roomType,
+    date: date,
+    rooms: filteredRooms
+  }
+}
+
+function addAvailableRoomsCustomer() {
+  $("#customer-availability-container").empty();
+  let date = $("#datepicker").val();
+  let roomsAvailable = customer.getRoomsAvailableDay(date);
+  if (roomsAvailable.length > 0) {
+    addAvailableRoomsToDOM(roomsAvailable);
+  } else {
+    $("#customer-availability-container").html(`<p>I am soooooo very sorry that no rooms
+    are currently available within your selected criteria</p>`);
+  }
+  return {
+    date: date,
+    rooms: roomsAvailable
+  }
+}
+
+function addAvailableRoomsToDOM(rooms) {
+  rooms.forEach(room => {
+    $("#customer-availability-container").append(`
+      <section class="availability-section" id="customer-room-available">
+        <div class="availability-room-num">
+          <p class="availability-room-p">Room ${room.number}</p>
+        </div>
+        <div class="availability-room-info">
+          <p>Room Type: ${room.roomType}</p>
+          <p>Bed Size: ${room.bedSize}</p>
+          <p>Number of Beds: ${room.numBeds}</p>
+          <p>Cost Per Night: ${room.costPerNight}</p>
+        </div>
+      </section>
+    `)
+  });
 }
 
 function addDatePicker() {
@@ -261,14 +336,20 @@ function addCustomerHTML() {
   <main class="user-page-main">
     <section class="customer-availability-section">
       <h2 class="customer-section-header">Available Rooms</h2>
-      <p class="customer-availability-date">November 2, 2019</p>
-      <div class="customer-availability-container">
+      <p class="customer-availability-date" id="customer-availability-date"></p>
+      <div class="customer-availability-container" id="customer-availability-container">
       </div>
     </section>
     <section class="customer-book-section">
       <article class="customer-filter-room-article">
         <h2 class="customer-section-header">Filter Rooms</h2>
-        <input class="customer-filter-input" type="radio">
+        <form id="customer-filter-form" class="customer-filter-form">
+          <p class="filter-radio"><input class="customer-filter-input" type="radio" name="roomType" value="residential suite" /> Residential Suite</p>
+          <p class="filter-radio"><input class="customer-filter-input" type="radio" name="roomType" value="suite"> Suite</p>
+          <p class="filter-radio"><input class="customer-filter-input" type="radio" name="roomType" value="junior suite"> Junior Suite</p>
+          <p class="filter-radio"><input class="customer-filter-input" type="radio" name="roomType" value="single room"> Single Room</p>
+          <p class="filter-radio"><input class="customer-filter-input" type="radio" name="roomType" value="clear"> Clear Search</p>
+        </form>
       </article>
       <article class="customer-select-room-article">
         <h2 class="customer-section-header">Selected Room</h2>
