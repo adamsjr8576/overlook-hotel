@@ -6,6 +6,8 @@ import './images/turing-logo.png'
 import './images/login-background.jpg'
 import './images/silva-logo.png'
 import './images/user-page.png'
+import Customer from './Customer'
+import Manager from './Manager'
 
 let usersData;
 let roomsData;
@@ -13,25 +15,23 @@ let bookingsData;
 let users;
 let rooms;
 let bookings;
-
-$("#login-submit-button").on('click', loginHandler);
-$("#user-header-logout").on('click', logout);
+$("body").on('click', "#user-header-logout", addloginHTML);
+$("body").on('click', "#login-submit-button", loginHandler);
 getDataOnUserPageLoad();
 
-function getDataOnUserPageLoad() {
-  if($(".user-page-header").length > 0) {
-    usersData = getData('users/users', 'users');
-    roomsData = getData('rooms/rooms', 'rooms');
-    bookingsData = getData('bookings/bookings', 'bookings');
-    Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
-      usersData = promise[0];
-      roomsData = promise[1];
-      bookingsData = promise[2];
-    }).then(data => {
+usersData = getData('users/users', 'users');
+roomsData = getData('rooms/rooms', 'rooms');
+bookingsData = getData('bookings/bookings', 'bookings');
 
-    });
-  }
-}
+Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
+  usersData = promise[0];
+  roomsData = promise[1];
+  bookingsData = promise[2];
+}).then(data => {
+  console.log(bookingsData.bookings)
+  // users = new User()
+});
+
 
 function getData(type, dataName) {
   const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
@@ -45,21 +45,16 @@ function loginHandler() {
   let customerCheck = makeCustomerNameCheck();
   login(customerCheck);
 }
-
 function login(customerCheck) {
   if($("#username-input").val() === 'manager'
   && $("#password-input").val() === 'overlook2019') {
-    window.location = "./manager-page.html";
+    addManagerHTML();
   } else if (customerCheck.includes($("#username-input").val())
   && $("#password-input").val() === 'overlook2019') {
-    window.location = "./customer-page.html";
+    addCustomerHTML();
   } else {
     errorMessageHandling();
   }
-}
-
-function logout() {
-  window.location = "./index.html";
 }
 
 function errorMessageHandling() {
@@ -74,4 +69,116 @@ function makeCustomerNameCheck() {
     customerOptions.push(`customer${i}`);
   }
   return customerOptions;
+}
+
+function addloginHTML() {
+  $("#login-page-body").empty();
+  $("#login-page-body").html(`
+    <header class="login-page-header">
+      <h1>Hotel</h1>
+      <img class="silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+      <h1>Silva</h1>
+    </header>
+    <main>
+      <form>
+        <section class="login-input-section">
+          <div class="login-input-container">
+            <label class="login-label" for="username-input">Username:</label>
+            <input class="login-input" id="username-input" type="text" placeholder="Username...">
+          </div>
+          <div class="login-input-container">
+            <label class="login-label" for="password-input">Password:</label>
+            <input class="login-input" id="password-input" type="password" placeholder="Password...">
+          <div>
+        </section>
+        <p class="error-message hidden" id="error-message">Username/Password not found - please enter again</p>
+        <button type="button" class="login-submit-button" id="login-submit-button">LOGIN</button>
+      </form>
+    </main>
+    `);
+}
+
+function addManagerHTML() {
+  $("#login-page-body").empty();
+  $("#login-page-body").html(`
+    <header class="user-page-header">
+      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+      <h1 class="manager-header-h1">Silva</h1>
+      <input class="manager-user-search" type="text" id="user-names-input" list="user-names" placeholder="User Name Search" >
+      <datalist id="user-names"></datalist>
+      <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
+      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+    </header>
+    <main class="user-page-main">
+      <section class="manager-section">
+        <article class="manager-section-article">
+          <h2 class="manager-section-header">User Name</h2>
+          <div class="user-booking-container" id="today-bookings">
+          </div>
+          <div class="user-info-button-container">
+            <button type="button" class="user-info-button" id="user-amount-button">Customer Amount Spent</button>
+            <button type="button" class="user-info-button" id="user-book-button">Make Customer Booking</button>
+            <button type="button" class="user-info-button" id="user-delete-button">Delete Customer Booking</button>
+          </div>
+        </article>
+        <article class="user-info-article">
+          <p>user info</p>
+        </article>
+      </section>
+      <section class="manager-section">
+        <div class="today-info-container">
+          <article class="today-info-article">
+            <p>todays revenue</p>
+          </article>
+          <article class="today-info-article">
+            <p>todays book percentage</p>
+          </article>
+        </div>
+        <article class="manager-section-article">
+          <h2 class="today-section-header">November 2, 2019 Bookings</h2>
+          <div class="today-booking-container">
+          </div>
+        </article>
+      </section>
+    </main>
+    `)
+}
+
+function addCustomerHTML() {
+  $("#login-page-body").empty();
+  $("#login-page-body").html(`
+    <header class="user-page-header">
+      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+      <h1 class="manager-header-h1">Silva</h1>
+      <input class="manager-user-search" type="date" id="user-names-input" list="user-names" placeholder="Select Date" >
+      <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
+      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+    </header>
+  <main class="user-page-main">
+    <section class="customer-availability-section">
+      <h2 class="customer-section-header">Available Rooms</h2>
+      <p class="customer-availability-date">November 2, 2019</p>
+      <div class="customer-availability-container">
+      </div>
+    </section>
+    <section class="customer-book-section">
+      <article class="customer-filter-room-article">
+        <h2 class="customer-section-header">Filter Rooms</h2>
+        <input class="customer-filter-input" type="radio">
+      </article>
+      <article class="customer-select-room-article">
+        <h2 class="customer-section-header">Selected Room</h2>
+        <div class="customer-selection-container">
+        </div>
+        <button class="user-info-button" type="button">BOOK NOW</button>
+      </article>
+    </section>
+    <section class="customer-info-section">
+      <h2 class="today-section-header">User Bookings</h2>
+      <div class="customer-availability-container">
+      </div>
+      <p class="customer-amount-spent">Amount Spent: <span class="dollars-spent" id="dollars-spent">$$$</span></p>
+    </section>
+  </main>
+    `)
 }
