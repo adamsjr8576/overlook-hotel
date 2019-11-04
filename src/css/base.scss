@@ -327,6 +327,16 @@ form {
   text-align: center;
 }
 
+.customer-user-search {
+  margin-right: 8px;
+  padding: 10px;
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  width: 18%;
+  font-size: $test-font-size;
+}
+
 .customer-book-section {
   margin-top: 15px;
   @extend %display-flex-column;

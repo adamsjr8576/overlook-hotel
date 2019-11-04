@@ -24,6 +24,8 @@ $("body").on('click', "#customer-filter-form", filterRoomsHandler);
 $("body").on('click', "#customer-room-available", displayRoomSelected);
 $("body").on('click', "#cancel-room-button", cancelRoomSelected);
 $("body").on('click', "#book-room-button", bookRoomHandler);
+$("body").on('click', "#user-search-button", userSearchHandler);
+$("body").on('click', "#user-amount-button", addUserSelectedSpent);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -102,7 +104,7 @@ function customerPageHandler() {
   id = Number($("#username-input").val().split('r')[1]);
   addCustomerHTML();
   instantiateCustomer(id);
-  addUserRoomBookings(id);
+  addUserRoomBookings(customer, id, "#customer-bookings");
   $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
   addDatePicker();
 }
@@ -124,7 +126,6 @@ function managerPageHandler(date) {
 
 function bookRoomHandler() {
   bookRoom();
-  // addUserRoomBookings(id);
 }
 
 function errorMessageHandling() {
@@ -138,6 +139,7 @@ function instantiateCustomer(id) {
 }
 
 function instantiateManager() {
+  console.log(bookingsData);
   manager = new Manager(usersData, bookingsData, roomsData);
 }
 
@@ -149,10 +151,11 @@ function makeCustomerNameCheck() {
   return customerOptions;
 }
 
-function addUserRoomBookings(id) {
-  let bookings = customer.getUserAllBookings(id);
+function addUserRoomBookings(user, id, appendLocation) {
+  let bookings = user.getUserAllBookings(id);
+  $(appendLocation).empty();
   bookings.forEach(booking => {
-    $("#customer-bookings").append(`
+    $(appendLocation).append(`
     <section class="booking-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${booking.roomNumber}</p>
@@ -271,9 +274,9 @@ function bookRoom() {
     setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
     getData('bookings/bookings', 'bookings')
     .then(data => {
-      bookingsData = data.bookings;
-      customer.bookings = bookingsData;
-      addUserRoomBookings(id);
+      bookingsData.bookings = data.bookings;
+      customer.bookings = bookingsData.bookings;
+      addUserRoomBookings(customer, id, "#customer-bookings");
       $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
     })
   })
@@ -302,6 +305,29 @@ function getAllUserNames() {
   userNames.forEach(userName => {
     $("#user-names").append(`<option value="${userName}">`);
   })
+}
+
+function userSearchHandler() {
+  let userName = $("#name-selection").val();
+  let customerSelected = createUser(userName);
+  manager.getUserInfo(manager.users, customerSelected.user.id);
+  $("#manager-section-user-name").text(customerSelected.user.name);
+  addUserRoomBookings(manager, customerSelected.user.id, "#user-selected-bookings")
+  $("#name-selection").val('');
+}
+
+function addUserSelectedSpent(id) {
+  // $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+  $("#manager-selected-user").after(`
+    <article class="user-info-article">
+      <p>$${manager.getUserTotalSpent(manager.user.id)}</p>
+    </article>`)
+}
+
+function createUser(name) {
+  let userInfo = manager.findUserInfo(name);
+  let customer = new Customer(usersData, bookingsData, roomsData, userInfo.id);
+  return customer
 }
 
 function addloginHTML() {
@@ -346,18 +372,15 @@ function addManagerHTML() {
     </header>
     <main class="user-page-main">
       <section class="manager-section">
-        <article class="manager-section-article">
-          <h2 class="manager-section-header">User Name</h2>
-          <div class="user-booking-container" id="today-bookings">
+        <article class="manager-section-article" id="manager-selected-user">
+          <h2 class="manager-section-header" id="manager-section-user-name">User Name</h2>
+          <div class="user-booking-container" id="user-selected-bookings">
           </div>
           <div class="user-info-button-container">
             <button type="button" class="user-info-button" id="user-amount-button">Customer Amount Spent</button>
             <button type="button" class="user-info-button" id="user-book-button">Make Customer Booking</button>
             <button type="button" class="user-info-button" id="user-delete-button">Delete Customer Booking</button>
           </div>
-        </article>
-        <article class="user-info-article">
-          <p>user info</p>
         </article>
       </section>
       <section class="manager-section">
@@ -384,7 +407,7 @@ function addCustomerHTML() {
     <header class="user-page-header">
       <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
       <h1 class="manager-header-h1">Silva</h1>
-      <input class="manager-user-search" id="datepicker" placeholder="Select Date" />
+      <input class="customer-user-search" id="datepicker" placeholder="Select Date" />
       <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
       <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
     </header>
