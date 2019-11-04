@@ -23,9 +23,13 @@ $("body").on('change', "#datepicker", roomsAvailableHandler);
 $("body").on('click', "#customer-filter-form", filterRoomsHandler);
 $("body").on('click', "#customer-room-available", displayRoomSelected);
 $("body").on('click', "#cancel-room-button", cancelRoomSelected);
-$("body").on('click', "#book-room-button", bookRoomHandler);
+$("body").on('click', "#book-room-button", bookRoom);
 $("body").on('click', "#user-search-button", userSearchHandler);
 $("body").on('click', "#user-amount-button", addUserSelectedSpent);
+$("body").on('click', "#user-info-delete-button", removeSelectUserInfo);
+$("body").on('click', "#daily-revenue-button", addTodayRevenue);
+$("body").on('click', "#daily-percent-button", addTodayPercent);
+$("body").on('click', "#user-book-button", makeSelectedCustomerBooking);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -113,19 +117,7 @@ function managerPageHandler(date) {
   addManagerHTML();
   instantiateManager();
   addTodaysAvailability(date);
-  $("#today-revenue").html(`
-    <p class="manager-today-p">Revenue</p>
-    <p class="manager-today">$${manager.getRevenueToday(date)}<p>
-    `);
-  $("#today-percentage").html(`
-    <p class="manager-today-p">Percentage Booked</p>
-    <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
-    `);
-    getAllUserNames();
-}
-
-function bookRoomHandler() {
-  bookRoom();
+  getAllUserNames();
 }
 
 function errorMessageHandling() {
@@ -316,18 +308,60 @@ function userSearchHandler() {
   $("#name-selection").val('');
 }
 
+function makeSelectedCustomerBooking() {
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="user-info-article">
+    <input class="user-select-date" id="datepicker" placeholder="Select Date" />
+    <div class="select-user-availability-container" id="customer-availability-container">
+    </div>
+    <div class="select-user-selection-container" id="customer-selection-container">
+    </div>
+    <button class="user-info-button" type="button" id="book-room-button">BOOK NOW</button>
+    <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
+    </article>`);
+    addDatePicker();
+}
+
 function addUserSelectedSpent(id) {
-  // $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
-  $("#manager-selected-user").after(`
-    <article class="user-info-article">
-      <p>$${manager.getUserTotalSpent(manager.user.id)}</p>
-    </article>`)
+    $("#user-selector-container").empty();
+    $("#user-selector-container").append(`
+      <article class="today-info-article" id="user-info-article">
+        <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+        <h2 class="user-selected-spent-h2">Money Spent</h2>
+        <p class="user-selected-spent-p">$${manager.getUserTotalSpent(manager.user.id)}</p>
+      </article>
+    `);
+}
+
+function removeSelectUserInfo () {
+  $("#user-selector-container").empty();
 }
 
 function createUser(name) {
   let userInfo = manager.findUserInfo(name);
   let customer = new Customer(usersData, bookingsData, roomsData, userInfo.id);
   return customer
+}
+
+function addTodayPercent() {
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="today-percentage">
+      <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+      <p class="manager-today-p">Percentage Booked</p>
+      <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
+    </article>`);
+}
+
+function addTodayRevenue() {
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="today-revenue">
+      <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+      <p class="manager-today-p">Revenue</p>
+      <p class="manager-today">$${manager.getRevenueToday(date)}<p>
+    </article>`);
 }
 
 function addloginHTML() {
@@ -383,16 +417,16 @@ function addManagerHTML() {
           </div>
         </article>
       </section>
+      <section class="manager-section" id="user-selector-container">
+      </section>
       <section class="manager-section">
-        <div class="today-info-container">
-          <article class="today-info-article" id="today-revenue">
-          </article>
-          <article class="today-info-article" id="today-percentage">
-          </article>
-        </div>
         <article class="manager-section-article">
           <h2 class="today-section-header">Current Availability</h2>
           <div class="today-booking-container" id="today-availability">
+          </div>
+          <div class="user-info-button-container">
+            <button type="button" class="user-info-button" id="daily-revenue-button">Revenue</button>
+            <button type="button" class="user-info-button" id="daily-percent-button">Percent Booked</button>
           </div>
         </article>
       </section>

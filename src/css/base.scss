@@ -218,13 +218,13 @@ form {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 45%;
-  margin-top: 25px;
+  width: 30%;
+  margin-top: 15px;
 }
 
 .manager-section-article {
   @extend %display-flex-column;
-  @include section-style(60%);
+  @include section-style(100%);
 }
 
 .manager-section-header {
@@ -236,6 +236,7 @@ form {
 }
 
 .user-booking-container {
+  @extend %display-flex-column;
   height: 375px;
   @extend %container-border;
 }
@@ -257,23 +258,71 @@ form {
     }
 }
 
-.user-info-article {
-  align-items: center;
-  @include section-style(35%);
-  height: 200px;
+.user-selected-spent-container {
+  @extend %display-flex-column;
+  text-align: center;
 }
 
+.user-selected-spent-h2 {
+  padding: 10px;
+  border-bottom: 2px solid #283f42;
+  width: 75%;
+}
+
+.user-selected-spent-p {
+  margin: 10px;
+  font-size: $sub-header-font-size;
+}
+
+.user-info-delete-button {
+  margin: 5px 5px 5px 85%;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  outline: 0;
+    &:hover {
+      background-color: $primary-background;
+    }
+    &:active {
+      transform: scale(.9);
+    }
+}
+
+.select-user-availability-container {
+  @extend %display-flex-column;
+  height: 300px;
+  @extend %container-border;
+  margin: 10px 0;
+}
+
+.select-user-selection-container {
+  @extend %display-flex-column;
+  height: 125px;
+  @extend %container-border;
+}
+
+.user-select-date {
+  margin-top: 10px;
+  padding: 10px;
+  border: 2px solid #283f42;
+  outline: 0;
+  border-radius: 10px;
+  width: 75%;
+  font-size: $test-font-size;
+}
 .today-info-container {
   @extend %display-flex-column;
   width: 35%;
 }
 
 .today-info-article {
+  text-align: center;
   @extend %display-flex-column;
-  justify-content: space-around;
   @include section-style(100%);
-  height: 200px;
-  margin: 30px 0;
+  justify-content: space-around;
 }
 
 .manager-today-p {
@@ -290,7 +339,7 @@ form {
 
 .today-booking-container {
   @extend %display-flex-column;
-  height: 500px;
+  height: 400px;
   @extend %container-border;
   margin: 20px;
 }
