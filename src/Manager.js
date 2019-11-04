@@ -4,6 +4,7 @@ class Manager extends User {
   constructor(users, bookings, rooms, id) {
     super(users, bookings, rooms, id);
     this.user = null;
+    this.users = users;
   }
 
   getRevenueToday(date) {
@@ -22,6 +23,14 @@ class Manager extends User {
     let roomsBookedNum = this.rooms.length - roomsAvailable.length;
     let percentage = (roomsBookedNum / this.rooms.length) * 100;
     return percentage;
+  }
+
+  getAllUserNames() {
+    return this.users.map(user => user = user.name);
+  }
+
+  findUserInfo(name) {
+    return this.users.find(user => user.name === name);
   }
 
   deleteBooking() {

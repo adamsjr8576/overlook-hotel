@@ -118,7 +118,8 @@ function managerPageHandler(date) {
   $("#today-percentage").html(`
     <p class="manager-today-p">Percentage Booked</p>
     <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
-    `)
+    `);
+    getAllUserNames();
 }
 
 function bookRoomHandler() {
@@ -134,7 +135,6 @@ function errorMessageHandling() {
 
 function instantiateCustomer(id) {
   customer = new Customer(usersData, bookingsData, roomsData, id);
-  console.log(customer);
 }
 
 function instantiateManager() {
@@ -297,6 +297,13 @@ function displayRoomSelected() {
   }
 }
 
+function getAllUserNames() {
+  let userNames = manager.getAllUserNames();
+  userNames.forEach(userName => {
+    $("#user-names").append(`<option value="${userName}">`);
+  })
+}
+
 function addloginHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
@@ -330,8 +337,10 @@ function addManagerHTML() {
     <header class="user-page-header">
       <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
       <h1 class="manager-header-h1">Silva</h1>
-      <input class="manager-user-search" type="text" id="user-names-input" list="user-names" placeholder="User Name Search" >
-      <datalist id="user-names"></datalist>
+      <form class="manager-header-form">
+        <input class="manager-user-search" list="user-names" id="name-selection" name="name-selection" placeholder="User Name Search" >
+        <button type="button" class="user-search-button" id="user-search-button">Search</button>
+      </form>
       <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
       <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
     </header>
@@ -365,6 +374,7 @@ function addManagerHTML() {
         </article>
       </section>
     </main>
+    <datalist id="user-names"></datalist>
     `)
 }
 

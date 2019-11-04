@@ -167,13 +167,31 @@ form {
   margin: 0;
 }
 
+.manager-header-form {
+  display: flex;
+  flex-direction: row;
+  width: 20%;
+  margin: 0;
+}
+
 .manager-user-search {
+  margin-right: 8px;
   padding: 10px;
   border: 0;
   outline: 0;
   border-radius: 10px;
-  width: 18%;
+  width: 85%;
   font-size: $test-font-size;
+}
+
+.user-search-button {
+  @include users-page-button(25%, 0);
+    &:hover {
+      @extend %button-hover;
+    }
+    &:active {
+      @extend %button-active;
+    }
 }
 
 .manager-header-date {
