@@ -22,7 +22,8 @@ $("body").on('click', "#login-submit-button", loginHandler);
 $("body").on('change', "#datepicker", roomsAvailableHandler);
 $("body").on('click', "#customer-filter-form", filterRoomsHandler);
 $("body").on('click', "#customer-room-available", displayRoomSelected);
-$("body").on('click', "#cancel-room-selection", cancelRoomSelected);
+$("body").on('click', "#cancel-room-button", cancelRoomSelected);
+$("body").on('click', "#book-room-button", bookRoomHandler);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -35,6 +36,14 @@ Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
 }).then(data => {
   usersData = usersData.users;
 });
+
+function getData(type, dataName) {
+  const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
+  const url = `${root}${type}`;
+  const promise = fetch(url)
+  .then(response => response.json())
+  return promise;
+}
 
 function formatDate(date) {
   var monthNames = [
@@ -59,14 +68,6 @@ const options = {
 }
 
 const formattedDate = dateObject.toLocaleString('en', options);
-
-function getData(type, dataName) {
-  const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
-  const url = `${root}${type}`;
-  const promise = fetch(url)
-  .then(response => response.json())
-  return promise;
-}
 
 function login(customerCheck) {
   if($("#username-input").val() === 'manager'
@@ -94,6 +95,7 @@ function filterRoomsHandler() {
 function roomsAvailableHandler() {
   let info = addAvailableRoomsCustomer();
   displaySelectedDate(info.date);
+  clearRoomSelected();
 }
 
 function customerPageHandler() {
@@ -119,6 +121,11 @@ function managerPageHandler(date) {
     `)
 }
 
+function bookRoomHandler() {
+  bookRoom();
+  // addUserRoomBookings(id);
+}
+
 function errorMessageHandling() {
     $("#username-input").val('');
     $("#password-input").val('');
@@ -127,6 +134,7 @@ function errorMessageHandling() {
 
 function instantiateCustomer(id) {
   customer = new Customer(usersData, bookingsData, roomsData, id);
+  console.log(customer);
 }
 
 function instantiateManager() {
@@ -246,12 +254,45 @@ function addDatePicker() {
   });
 }
 
+function bookRoom() {
+  let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
+  let roomNum = Number(roomNumP.split(' ')[1]);
+  let date = $("#datepicker").val();
+  customer.postBooking(date, roomNum)
+  .then(response => {
+    if (response.ok) {
+      return response.json()
+    } else {
+      return Promise.reject(`error ${response.status} - ${response.statusText}`);
+    }
+  })
+  .then(data => {
+    $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
+    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    getData('bookings/bookings', 'bookings')
+    .then(data => {
+      bookingsData = data.bookings;
+      customer.bookings = bookingsData;
+      addUserRoomBookings(id);
+      $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+    })
+  })
+  .catch(err => {
+    $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+  });
+}
+
+function clearRoomSelected() {
+  $("#customer-selection-container").empty();
+}
+
 function cancelRoomSelected() {
   $("#customer-availability-container").append($("#customer-selection-container").children());
 }
 
 function displayRoomSelected() {
-  if ($("#customer-selection-container").html().length === 9) {
+  if ($("#customer-selection-container").html().length === 0) {
     $("#customer-selection-container").append(this);
   }
 }
@@ -359,8 +400,8 @@ function addCustomerHTML() {
         <h2 class="customer-section-header">Selected Room</h2>
         <div class="customer-selection-container" id="customer-selection-container">
         </div>
-        <button class="user-info-button" type="button">BOOK NOW</button>
-        <button class="user-info-button" type="button" id="cancel-room-selection">cancel</button>
+        <button class="user-info-button" type="button" id="book-room-button">BOOK NOW</button>
+        <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
       </article>
     </section>
     <section class="customer-info-section">

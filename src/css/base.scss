@@ -32,6 +32,8 @@
   padding: 10px;
   width: 95%;
   margin: 5px 0;
+  background-color: $primary-background;
+  color: $login-text-color;
 }
 
 .clearfix:after {
@@ -369,14 +371,14 @@ form {
 .manager-availability-section {
   @extend %room-list-style;
   &:hover {
-    background-color: white;
+    background-color: $secondary-background-color;
   }
 }
 
 .booking-section {
   @extend %room-list-style;
   &:hover {
-    background-color: white;
+    background-color: $secondary-background-color;
   }
 }
 
@@ -384,7 +386,7 @@ form {
   @extend %room-list-style;
   cursor: pointer;
     &:hover {
-      background-color: white;
+      background-color: $secondary-background-color;
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
     &:active {
@@ -394,7 +396,8 @@ form {
 
 .availability-room-num {
   width: 85%;
-  border-bottom: 2px solid #283f42;
+  border-bottom: 2px solid $login-text-color;
+  margin-bottom: 5px;
 }
 
 .availability-room-p {
@@ -406,4 +409,9 @@ form {
   text-align: center;
   @extend %display-flex-column;
   width: 75%;
+}
+
+.post-message {
+  margin: 50px auto;
+  text-align: center;
 }
