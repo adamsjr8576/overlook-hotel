@@ -163,6 +163,13 @@ form {
   justify-content: space-between;
 }
 
+.manager-header-logo-container {
+  width: 20%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .manager-header-h1 {
   margin: 0;
 }
@@ -186,6 +193,7 @@ form {
 
 .user-search-button {
   @include users-page-button(25%, 0);
+  min-width: 75px;
     &:hover {
       @extend %button-hover;
     }
@@ -194,18 +202,26 @@ form {
     }
 }
 
+.manager-header-date-container {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  align-items: center;
+}
+
 .manager-header-date {
   background-color: $secondary-background-color;
   color: $login-text-color;
   padding: 5px;
   font-size: $sub-header-font-size;
   border-radius: 10px;
-  width: 35%;
+  width: 75%;
   text-align: center;
 }
 
 .user-header-logout {
-  @include users-page-button(10%, 0 40px 0 0)
+  @include users-page-button(15%, 0 40px 0 0);
+  height: 30px;
     &:hover {
       @extend %button-hover;
     }
@@ -483,4 +499,53 @@ form {
 .post-message {
   margin: 50px auto;
   text-align: center;
+}
+
+@media screen and (max-width: 1400px) {
+
+}
+
+@media screen and (max-width: 1000px) {
+  .user-page-header {
+    flex-direction: column;
+  }
+
+  .manager-header-logo-container {
+    width: 75%;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .manager-header-form {
+    width: 75%;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .manager-header-date-container {
+    width: 90%;
+    justify-content: space-around;
+    margin: 10px;
+  }
+
+  .manager-user-search {
+    width: 35%;
+    margin-right: 20px;
+  }
+
+  .user-page-main {
+    flex-direction: column-reverse;
+  }
+
+  .manager-section {
+    width: 80%;
+  }
+
+  .manager-section {
+    width: 80%;
+  }
+
+  .manager-section {
+    width: 80%;
+  }
 }

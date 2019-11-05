@@ -352,6 +352,22 @@ function userSearchHandler() {
   $("#name-selection").val('');
 }
 
+$("body").on('click', "#user-delete-button", addUserDeleteBooking);
+
+function addUserDeleteBooking() {
+  if ($("#user-selected-bookings").html().length > 0) {
+    $("#user-selector-container").empty();
+    $("#user-selector-container").append(`
+      <article class="today-info-article" id="user-info-article">
+        <div class="select-user-selection-container" id="customer-selection-container">
+        </div>
+        <button class="user-info-button" type="button" id="book-room-button">BOOK NOW</button>
+        <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
+      </article>
+      `);
+  }
+}
+
 function addSelectedCustomerBooking() {
   if ($("#user-selected-bookings").html().length > 0) {
   $("#user-selector-container").empty();
@@ -436,14 +452,18 @@ function addManagerHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
     <header class="user-page-header">
-      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1 class="manager-header-h1">Silva</h1>
+      <div class="manager-header-logo-container">
+        <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+        <h1 class="manager-header-h1">Silva</h1>
+      </div>
       <form class="manager-header-form">
         <input class="manager-user-search" list="user-names" id="name-selection" name="name-selection" placeholder="User Name Search" >
         <button type="button" class="user-search-button" id="user-search-button">Search</button>
       </form>
-      <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
-      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      <div class="manager-header-date-container">
+        <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
+        <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      </div>
     </header>
     <main class="user-page-main">
       <section class="manager-section">
