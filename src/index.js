@@ -422,7 +422,7 @@ function getAllUserNames() {
   let userNames = manager.getAllUserNames();
   userNames.forEach(userName => {
     $("#user-names").append(`<option value="${userName}">`);
-  })
+  });
 }
 
 function createUser(name) {
@@ -439,12 +439,15 @@ function addUserBookingsToDelete() {
 }
 
 function userSearchHandler() {
-  let userName = $("#name-selection").val();
-  let customerSelected = createUser(userName);
-  manager.getUserInfo(manager.users, customerSelected.user.id);
-  $("#manager-section-user-name").text(customerSelected.user.name);
-  addUserRoomBookings(manager, customerSelected.user.id, "#user-selected-bookings")
-  $("#name-selection").val('');
+  let userNames = manager.getAllUserNames();
+  if ($("#name-selection").val().length > 0 && userNames.includes($("#name-selection").val())) {
+    let userName = $("#name-selection").val();
+    let customerSelected = createUser(userName);
+    manager.getUserInfo(manager.users, customerSelected.user.id);
+    $("#manager-section-user-name").text(customerSelected.user.name);
+    addUserRoomBookings(manager, customerSelected.user.id, "#user-selected-bookings")
+    $("#name-selection").val('');
+  }
 }
 
 function addUserDeleteBooking() {
