@@ -33,8 +33,16 @@ class Manager extends User {
     return this.users.find(user => user.name === name);
   }
 
-  deleteBooking() {
-
+  deleteBooking(confirmationNum) {
+    return fetch('https://fe-apps.herokuapp.com/api/v1/overlook/1904/bookings/bookings', {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: confirmationNum
+      })
+    });
   }
 
 }

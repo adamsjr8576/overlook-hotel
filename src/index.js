@@ -32,6 +32,8 @@ $("body").on('click', "#daily-percent-button", addTodayPercent);
 $("body").on('click', "#user-book-button", addSelectedCustomerBooking);
 $("body").on('click', "#user-delete-button", deleteBookingHandler);
 $("body").on("click", "#user-booking-delete-button", addUserBookingsToDelete);
+$("body").on('click', "#delete-room-button", deleteBooking);
+$("body").on('click', "#cancel-room-button", cancelRoomSelectedToDelete);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -43,7 +45,6 @@ Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
   bookingsData = promise[2];
 }).then(data => {
   usersData = usersData.users;
-  console.log('done!!!!');
 })
 
 function getData(type, dataName) {
@@ -161,6 +162,13 @@ function makeCustomerNameCheck() {
 
 function addUserRoomBookings(user, id, appendLocation) {
   let bookings = user.getUserAllBookings(id);
+  bookings.sort((a, b) => {
+    if (b.date < a.date) {
+      return -1
+    } else if(b.date > a.date) {
+      return 1
+    }
+  });
   $(appendLocation).empty();
   bookings.forEach(booking => {
     $(appendLocation).append(`
@@ -179,6 +187,13 @@ function addUserRoomBookings(user, id, appendLocation) {
 
 function addUserRoomBookingsToDelete() {
   let bookings = manager.getUserAllBookings(manager.user.id);
+  bookings.sort((a, b) => {
+    if (b.date < a.date) {
+      return -1
+    } else if(b.date > a.date) {
+      return 1
+    }
+  });
   $("#user-selected-bookings").empty();
   bookings.forEach(booking => {
     $("#user-selected-bookings").append(`
@@ -285,68 +300,95 @@ function addDatePicker() {
 }
 
 function bookRoomManager() {
-  let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
-  let roomNum = Number(roomNumP.split(' ')[1]);
-  let date = $("#datepicker").val();
-  manager.postBooking(date, roomNum)
-  .then(response => {
-    if (response.ok) {
-      return response.json()
-    } else {
-      return Promise.reject(`error ${response.status} - ${response.statusText}`);
-    }
-  })
-  .then(data => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-    getData('bookings/bookings', 'bookings')
-    .then(data => {
-      bookingsData.bookings = data.bookings;
-      manager.bookings = bookingsData.bookings;
-      addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+  if ($("#customer-selection-container").html().length > 10) {
+    let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
+    let roomNum = Number(roomNumP.split(' ')[1]);
+    let date = $("#datepicker").val();
+    manager.postBooking(date, roomNum)
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
     })
-  })
-  .catch(err => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-  });
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        manager.bookings = bookingsData.bookings;
+        addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
 }
 
 function bookRoomCustomer() {
-  let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
-  let roomNum = Number(roomNumP.split(' ')[1]);
-  let date = $("#datepicker").val();
-  customer.postBooking(date, roomNum)
-  .then(response => {
-    if (response.ok) {
-      return response.json()
-    } else {
-      return Promise.reject(`error ${response.status} - ${response.statusText}`);
-    }
-  })
-  .then(data => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-    getData('bookings/bookings', 'bookings')
-    .then(data => {
-      bookingsData.bookings = data.bookings;
-      customer.bookings = bookingsData.bookings;
-      addUserRoomBookings(customer, id, "#customer-bookings");
-      $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+  if ($("#customer-selection-container").html().length > 10) {
+    console.log($("#customer-selection-container").html().length)
+    let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
+    let roomNum = Number(roomNumP.split(' ')[1]);
+    let date = $("#datepicker").val();
+    customer.postBooking(date, roomNum)
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
     })
-  })
-  .catch(err => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-  });
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        customer.bookings = bookingsData.bookings;
+        addUserRoomBookings(customer, id, "#customer-bookings");
+        $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+        addAvailableRoomsCustomer(customer);
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
 }
 
-$("body").on('click', "#delete-room-button", deleteBooking);
-
 function deleteBooking() {
-  // console.log($("#customer-selection-container").children().children().children('p.booking-id')[0].innerText)
-  let roomNumP = $("#customer-selection-container").children().children().children('p.booking-id')[0].innerText;
-  let roomNum = Number(roomNumP.split(' ')[1]);
+  if ($("#customer-selection-container").html().length > 10) {
+    let roomConfirmP = $("#customer-selection-container").children().children().children('p.booking-id')[0].innerText;
+    let roomConfirmNum = Number(roomConfirmP.split(' ')[1]);
+    manager.deleteBooking(roomConfirmNum)
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
+    })
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Delete Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        manager.bookings = bookingsData.bookings;
+        addUserRoomBookingsToDelete();
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
 }
 
 function clearRoomSelected() {
@@ -356,8 +398,6 @@ function clearRoomSelected() {
 function cancelRoomSelected() {
   $("#customer-availability-container").append($("#customer-selection-container").children());
 }
-
-$("body").on('click', "#cancel-room-button", cancelRoomSelectedToDelete);
 
 function cancelRoomSelectedToDelete() {
   $("#customer-selection-container").children().children().next().append(`
