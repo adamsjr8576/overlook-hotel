@@ -162,13 +162,7 @@ function makeCustomerNameCheck() {
 
 function addUserRoomBookings(user, id, appendLocation) {
   let bookings = user.getUserAllBookings(id);
-  bookings.sort((a, b) => {
-    if (b.date < a.date) {
-      return -1
-    } else if(b.date > a.date) {
-      return 1
-    }
-  });
+  bookings = sortDates(bookings);
   $(appendLocation).empty();
   bookings.forEach(booking => {
     $(appendLocation).append(`
@@ -185,17 +179,24 @@ function addUserRoomBookings(user, id, appendLocation) {
   });
 }
 
-function addUserRoomBookingsToDelete() {
-  let bookings = manager.getUserAllBookings(manager.user.id);
-  bookings.sort((a, b) => {
+function sortDates(dates) {
+  return dates.sort((a, b) => {
     if (b.date < a.date) {
       return -1
     } else if(b.date > a.date) {
       return 1
     }
   });
+}
+
+function addUserRoomBookingsToDelete() {
+  let bookings = manager.getUserAllBookings(manager.user.id);
+  let filteredBookings = bookings.filter(booking => {
+    return booking.date > date;
+  });
+  filteredBookings = sortDates(filteredBookings)
   $("#user-selected-bookings").empty();
-  bookings.forEach(booking => {
+  filteredBookings.forEach(booking => {
     $("#user-selected-bookings").append(`
     <section class="booking-section">
       <div class="availability-room-num">
