@@ -14,7 +14,7 @@ class Manager extends User {
     });
     return roomsBooked.reduce((revenue, bookedRoom) => {
       revenue += bookedRoom.costPerNight;
-      return revenue;
+      return Math.round(revenue);
     }, 0);
   }
 
@@ -22,7 +22,7 @@ class Manager extends User {
     let roomsAvailable = this.getRoomsAvailableDay(date);
     let roomsBookedNum = this.rooms.length - roomsAvailable.length;
     let percentage = (roomsBookedNum / this.rooms.length) * 100;
-    return percentage;
+    return Math.round(percentage);
   }
 
   getAllUserNames() {

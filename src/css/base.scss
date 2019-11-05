@@ -274,21 +274,12 @@ form {
   font-size: $sub-header-font-size;
 }
 
+.user-book-delete-button {
+  @include delete-button(5px 5px 5px 20px);
+}
+
 .user-info-delete-button {
-  margin: 5px 5px 5px 85%;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  outline: 0;
-    &:hover {
-      background-color: $primary-background;
-    }
-    &:active {
-      transform: scale(.9);
-    }
+  @include delete-button(5px 5px 5px 85%);
 }
 
 .select-user-availability-container {
@@ -313,6 +304,7 @@ form {
   width: 75%;
   font-size: $test-font-size;
 }
+
 .today-info-container {
   @extend %display-flex-column;
   width: 35%;
