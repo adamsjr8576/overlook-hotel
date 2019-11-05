@@ -37,4 +37,19 @@ describe('Manager', () => {
   it('should be able to find the percentage of rooms booked for any given day', function() {
     expect(manager.getPercentageOccupancy("2019/11/22")).to.equal(30);
   });
+
+  it('should be able to find the name of all users', function() {
+    expect(manager.getAllUserNames()).to.deep.equal([ 'Leatha Ullrich',
+  'Rocio Schuster',
+  'Kelvin Schiller',
+  'Kennedi Emard',
+  'Rhiannon Little' ]);
+  });
+
+  it('should be able to find user info for a user based on name', function() {
+    expect(manager.findUserInfo("Rocio Schuster")).to.deep.equal({
+      id: 2,
+      name: "Rocio Schuster"
+    });
+  });
 });

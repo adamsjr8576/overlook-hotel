@@ -163,17 +163,50 @@ form {
   justify-content: space-between;
 }
 
+.manager-header-logo-container {
+  width: 20%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .manager-header-h1 {
   margin: 0;
 }
 
+.manager-header-form {
+  display: flex;
+  flex-direction: row;
+  width: 20%;
+  margin: 0;
+}
+
 .manager-user-search {
+  margin-right: 8px;
   padding: 10px;
   border: 0;
   outline: 0;
   border-radius: 10px;
-  width: 18%;
+  width: 85%;
   font-size: $test-font-size;
+}
+
+.user-search-button {
+  @include users-page-button(25%, 0);
+  min-width: 75px;
+    &:hover {
+      @extend %button-hover;
+    }
+    &:active {
+      @extend %button-active;
+    }
+}
+
+.manager-header-date-container {
+  display: flex;
+  justify-content: space-between;
+  width: 55%;
+  align-items: center;
 }
 
 .manager-header-date {
@@ -182,12 +215,13 @@ form {
   padding: 5px;
   font-size: $sub-header-font-size;
   border-radius: 10px;
-  width: 35%;
+  width: 75%;
   text-align: center;
 }
 
 .user-header-logout {
-  @include users-page-button(10%, 0 40px 0 0)
+  @include users-page-button(15%, 0 40px 0 0);
+  height: 30px;
     &:hover {
       @extend %button-hover;
     }
@@ -200,13 +234,13 @@ form {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 45%;
-  margin-top: 25px;
+  width: 30%;
+  margin-top: 15px;
 }
 
 .manager-section-article {
   @extend %display-flex-column;
-  @include section-style(60%);
+  @include section-style(100%);
 }
 
 .manager-section-header {
@@ -218,6 +252,7 @@ form {
 }
 
 .user-booking-container {
+  @extend %display-flex-column;
   height: 375px;
   @extend %container-border;
 }
@@ -239,10 +274,51 @@ form {
     }
 }
 
-.user-info-article {
-  align-items: center;
-  @include section-style(35%);
-  height: 200px;
+.user-selected-spent-container {
+  @extend %display-flex-column;
+  text-align: center;
+}
+
+.user-selected-spent-h2 {
+  padding: 10px;
+  border-bottom: 2px solid #283f42;
+  width: 75%;
+}
+
+.user-selected-spent-p {
+  margin: 10px;
+  font-size: $sub-header-font-size;
+}
+
+.user-book-delete-button {
+  @include delete-button(5px 5px 5px 20px);
+}
+
+.user-info-delete-button {
+  @include delete-button(5px 5px 5px 85%);
+}
+
+.select-user-availability-container {
+  @extend %display-flex-column;
+  height: 300px;
+  @extend %container-border;
+  margin: 10px 0;
+}
+
+.select-user-selection-container {
+  @extend %display-flex-column;
+  height: 125px;
+  @extend %container-border;
+}
+
+.user-select-date {
+  margin-top: 10px;
+  padding: 10px;
+  border: 2px solid #283f42;
+  outline: 0;
+  border-radius: 10px;
+  width: 75%;
+  font-size: $test-font-size;
 }
 
 .today-info-container {
@@ -251,11 +327,10 @@ form {
 }
 
 .today-info-article {
+  text-align: center;
   @extend %display-flex-column;
-  justify-content: space-around;
   @include section-style(100%);
-  height: 200px;
-  margin: 30px 0;
+  justify-content: space-around;
 }
 
 .manager-today-p {
@@ -272,7 +347,7 @@ form {
 
 .today-booking-container {
   @extend %display-flex-column;
-  height: 500px;
+  height: 400px;
   @extend %container-border;
   margin: 20px;
 }
@@ -307,6 +382,16 @@ form {
 .customer-availability-date {
   font-size: $sub-header-font-size;
   text-align: center;
+}
+
+.customer-user-search {
+  margin-right: 8px;
+  padding: 10px;
+  border: 0;
+  outline: 0;
+  border-radius: 10px;
+  width: 18%;
+  font-size: $test-font-size;
 }
 
 .customer-book-section {
@@ -414,4 +499,78 @@ form {
 .post-message {
   margin: 50px auto;
   text-align: center;
+}
+
+@media screen and (max-width: 1400px) {
+
+}
+
+@media screen and (max-width: 1000px) {
+  .user-page-header {
+    flex-direction: column;
+  }
+
+  .manager-header-logo-container {
+    width: 75%;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .manager-header-form {
+    width: 75%;
+    justify-content: center;
+    margin: 10px;
+  }
+
+  .manager-header-date-container {
+    width: 90%;
+    justify-content: space-around;
+    margin: 10px;
+  }
+
+  .manager-user-search {
+    width: 35%;
+    margin-right: 20px;
+  }
+
+  .user-page-main {
+    flex-direction: column-reverse;
+  }
+
+  .manager-section {
+    width: 80%;
+  }
+
+  .customer-availability-section {
+    width: 80%;
+  }
+
+  .customer-book-section {
+    width: 80%;
+  }
+
+  .customer-info-section {
+    width: 80%;
+  }
+
+  .customer-user-search {
+    width: 35%;
+  }
+
+  .user-silva-logo {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 605px) {
+.manager-header-date-container {
+  flex-direction: column;
+}
+
+.user-header-logout {
+  margin: 20px 0 0 0;
+  align-items: center;
+  justify-content: space-around;
+}
+
 }

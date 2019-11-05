@@ -24,6 +24,16 @@ $("body").on('click', "#customer-filter-form", filterRoomsHandler);
 $("body").on('click', "#customer-room-available", displayRoomSelected);
 $("body").on('click', "#cancel-room-button", cancelRoomSelected);
 $("body").on('click', "#book-room-button", bookRoomHandler);
+$("body").on('click', "#user-search-button", userSearchHandler);
+$("body").on('click', "#user-amount-button", addUserSelectedSpent);
+$("body").on('click', "#user-info-delete-button", removeSelectUserInfo);
+$("body").on('click', "#daily-revenue-button", addTodayRevenue);
+$("body").on('click', "#daily-percent-button", addTodayPercent);
+$("body").on('click', "#user-book-button", addSelectedCustomerBooking);
+$("body").on('click', "#user-delete-button", deleteBookingHandler);
+$("body").on("click", "#user-booking-delete-button", addUserBookingsToDelete);
+$("body").on('click', "#delete-room-button", deleteBooking);
+$("body").on('click', "#cancel-room-button", cancelRoomSelectedToDelete);
 
 usersData = getData('users/users', 'users');
 roomsData = getData('rooms/rooms', 'rooms');
@@ -35,7 +45,7 @@ Promise.all([usersData, roomsData, bookingsData]).then((promise) => {
   bookingsData = promise[2];
 }).then(data => {
   usersData = usersData.users;
-});
+})
 
 function getData(type, dataName) {
   const root = 'https://fe-apps.herokuapp.com/api/v1/overlook/1904/';
@@ -46,16 +56,10 @@ function getData(type, dataName) {
 }
 
 function formatDate(date) {
-  var monthNames = [
-    "1", "2", "3",
-    "4", "5", "6", "7",
-    "8", "9", "10",
-    "11", "12"
-  ];
-  var day = date.getDate();
-  var monthIndex = date.getMonth();
+  var day = ("0" + date.getDate()).slice(-2);
+  var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2);
   var year = date.getFullYear();
-  return year + '/' + monthNames[monthIndex] + '/' + day;
+  return year + '/' + monthIndex + '/' + day;
 }
 
 const date = formatDate(new Date());
@@ -93,7 +97,11 @@ function filterRoomsHandler() {
 }
 
 function roomsAvailableHandler() {
-  let info = addAvailableRoomsCustomer();
+  if (!customer) {
+    var info = addAvailableRoomsCustomer(manager);
+  } else {
+    var info = addAvailableRoomsCustomer(customer);
+  }
   displaySelectedDate(info.date);
   clearRoomSelected();
 }
@@ -102,7 +110,7 @@ function customerPageHandler() {
   id = Number($("#username-input").val().split('r')[1]);
   addCustomerHTML();
   instantiateCustomer(id);
-  addUserRoomBookings(id);
+  addUserRoomBookings(customer, id, "#customer-bookings");
   $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
   addDatePicker();
 }
@@ -111,19 +119,23 @@ function managerPageHandler(date) {
   addManagerHTML();
   instantiateManager();
   addTodaysAvailability(date);
-  $("#today-revenue").html(`
-    <p class="manager-today-p">Revenue</p>
-    <p class="manager-today">$${manager.getRevenueToday(date)}<p>
-    `);
-  $("#today-percentage").html(`
-    <p class="manager-today-p">Percentage Booked</p>
-    <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
-    `)
+  getAllUserNames();
+  $("#user-selected-bookings").empty();
 }
 
 function bookRoomHandler() {
-  bookRoom();
-  // addUserRoomBookings(id);
+  if ($("#user-header").hasClass('manager')) {
+    bookRoomManager();
+  } else {
+    bookRoomCustomer();
+  }
+}
+
+function deleteBookingHandler() {
+  if (manager.user) {
+    addUserDeleteBooking();
+    addUserRoomBookingsToDelete();
+  }
 }
 
 function errorMessageHandling() {
@@ -134,7 +146,6 @@ function errorMessageHandling() {
 
 function instantiateCustomer(id) {
   customer = new Customer(usersData, bookingsData, roomsData, id);
-  console.log(customer);
 }
 
 function instantiateManager() {
@@ -149,17 +160,52 @@ function makeCustomerNameCheck() {
   return customerOptions;
 }
 
-function addUserRoomBookings(id) {
-  let bookings = customer.getUserAllBookings(id);
+function addUserRoomBookings(user, id, appendLocation) {
+  let bookings = user.getUserAllBookings(id);
+  bookings = sortDates(bookings);
+  $(appendLocation).empty();
   bookings.forEach(booking => {
-    $("#customer-bookings").append(`
+    $(appendLocation).append(`
     <section class="booking-section">
       <div class="availability-room-num">
       <p class="availability-room-p">Room ${booking.roomNumber}</p>
       </div>
       <div class="availability-room-info">
       <p>Booking Date: ${booking.date}</p>
-      <p>Confirmation #: ${booking.id}</p>
+      <p class="booking-id">Confirmation#: ${booking.id}</p>
+      </div>
+    </section>
+    `);
+  });
+}
+
+function sortDates(dates) {
+  return dates.sort((a, b) => {
+    if (b.date < a.date) {
+      return -1
+    } else if(b.date > a.date) {
+      return 1
+    }
+  });
+}
+
+function addUserRoomBookingsToDelete() {
+  let bookings = manager.getUserAllBookings(manager.user.id);
+  let filteredBookings = bookings.filter(booking => {
+    return booking.date > date;
+  });
+  filteredBookings = sortDates(filteredBookings)
+  $("#user-selected-bookings").empty();
+  filteredBookings.forEach(booking => {
+    $("#user-selected-bookings").append(`
+    <section class="booking-section">
+      <div class="availability-room-num">
+        <p class="availability-room-p">Room ${booking.roomNumber}</p>
+      </div>
+      <div class="availability-room-info">
+        <p>Booking Date: ${booking.date}</p>
+        <p class="booking-id">Confirmation#: ${booking.id}</p>
+        <button type="button" class="user-info-button" id="user-booking-delete-button">Select</button>
       </div>
     </section>
     `);
@@ -192,7 +238,7 @@ function displaySelectedDate(date) {
 
 function clearSearch(roomType) {
   if (roomType === 'clear') {
-    addAvailableRoomsCustomer();
+    addAvailableRoomsCustomer(customer);
   }
 }
 
@@ -214,10 +260,10 @@ function filterRoomsAvailable() {
   }
 }
 
-function addAvailableRoomsCustomer() {
+function addAvailableRoomsCustomer(user) {
   $("#customer-availability-container").empty();
   let date = $("#datepicker").val();
-  let roomsAvailable = customer.getRoomsAvailableDay(date);
+  let roomsAvailable = user.getRoomsAvailableDay(date);
   if (roomsAvailable.length > 0) {
     addAvailableRoomsToDOM(roomsAvailable);
   } else {
@@ -254,33 +300,96 @@ function addDatePicker() {
   });
 }
 
-function bookRoom() {
-  let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
-  let roomNum = Number(roomNumP.split(' ')[1]);
-  let date = $("#datepicker").val();
-  customer.postBooking(date, roomNum)
-  .then(response => {
-    if (response.ok) {
-      return response.json()
-    } else {
-      return Promise.reject(`error ${response.status} - ${response.statusText}`);
-    }
-  })
-  .then(data => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-    getData('bookings/bookings', 'bookings')
-    .then(data => {
-      bookingsData = data.bookings;
-      customer.bookings = bookingsData;
-      addUserRoomBookings(id);
-      $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+function bookRoomManager() {
+  if ($("#customer-selection-container").html().length > 10) {
+    let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
+    let roomNum = Number(roomNumP.split(' ')[1]);
+    let date = $("#datepicker").val();
+    manager.postBooking(date, roomNum)
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
     })
-  })
-  .catch(err => {
-    $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
-    setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
-  });
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        manager.bookings = bookingsData.bookings;
+        addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
+}
+
+function bookRoomCustomer() {
+  if ($("#customer-selection-container").html().length > 10) {
+    console.log($("#customer-selection-container").html().length)
+    let roomNumP = $("#customer-selection-container").children().children().children('p.availability-room-p')[0].innerText;
+    let roomNum = Number(roomNumP.split(' ')[1]);
+    let date = $("#datepicker").val();
+    customer.postBooking(date, roomNum)
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
+    })
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        customer.bookings = bookingsData.bookings;
+        addUserRoomBookings(customer, id, "#customer-bookings");
+        $("#dollars-spent").text(`$${customer.getUserTotalSpent(id)}`);
+        addAvailableRoomsCustomer(customer);
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
+}
+
+function deleteBooking() {
+  if ($("#customer-selection-container").html().length > 10) {
+    let roomConfirmP = $("#customer-selection-container").children().children().children('p.booking-id')[0].innerText;
+    let roomConfirmNum = Number(roomConfirmP.split(' ')[1]);
+    manager.deleteBooking(roomConfirmNum)
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        return Promise.reject(`error ${response.status} - ${response.statusText}`);
+      }
+    })
+    .then(data => {
+      $("#customer-selection-container").html(`<p class="post-message">Delete Booking Successful!</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+      getData('bookings/bookings', 'bookings')
+      .then(data => {
+        bookingsData.bookings = data.bookings;
+        manager.bookings = bookingsData.bookings;
+        addUserRoomBookingsToDelete();
+      })
+    })
+    .catch(err => {
+      $("#customer-selection-container").html(`<p class="post-message">Booking Unsuccessful! ${err}</p>`);
+      setTimeout(function() {$("#customer-selection-container").empty()}, 3000);
+    });
+  }
 }
 
 function clearRoomSelected() {
@@ -291,10 +400,130 @@ function cancelRoomSelected() {
   $("#customer-availability-container").append($("#customer-selection-container").children());
 }
 
+function cancelRoomSelectedToDelete() {
+  $("#customer-selection-container").children().children().next().append(`
+    <button type="button" class="user-info-button" id="user-booking-delete-button">Select</button>`)
+  $("#user-selected-bookings").append($("#customer-selection-container").children());
+}
+
 function displayRoomSelected() {
   if ($("#customer-selection-container").html().length === 0) {
     $("#customer-selection-container").append(this);
   }
+}
+
+function removeSelectUserInfo () {
+  if (manager.user) {
+    addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+  }
+  $("#user-selector-container").empty();
+}
+
+function getAllUserNames() {
+  let userNames = manager.getAllUserNames();
+  userNames.forEach(userName => {
+    $("#user-names").append(`<option value="${userName}">`);
+  });
+}
+
+function createUser(name) {
+  let userInfo = manager.findUserInfo(name);
+  let customer = new Customer(usersData, bookingsData, roomsData, userInfo.id);
+  return customer
+}
+
+function addUserBookingsToDelete() {
+  if ($("#customer-selection-container").html().length === 0) {
+    $("#customer-selection-container").append($(this).parent().parent());
+    $(this).remove();
+  }
+}
+
+function userSearchHandler() {
+  let userNames = manager.getAllUserNames();
+  if ($("#name-selection").val().length > 0 && userNames.includes($("#name-selection").val())) {
+    let userName = $("#name-selection").val();
+    let customerSelected = createUser(userName);
+    manager.getUserInfo(manager.users, customerSelected.user.id);
+    $("#manager-section-user-name").text(customerSelected.user.name);
+    addUserRoomBookings(manager, customerSelected.user.id, "#user-selected-bookings")
+    $("#name-selection").val('');
+  }
+}
+
+function addUserDeleteBooking() {
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="user-info-article">
+      <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+      <div class="select-user-selection-container" id="customer-selection-container">
+      </div>
+      <button class="user-info-button" type="button" id="delete-room-button">DELETE</button>
+      <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
+    </article>
+    `);
+    $("#customer-selection-container").empty();
+}
+
+function addSelectedCustomerBooking() {
+  if (manager.user) {
+    addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+    $("#user-selector-container").empty();
+    $("#user-selector-container").append(`
+      <article class="today-info-article" id="user-info-article">
+        <div>
+          <input class="user-select-date" id="datepicker" placeholder="Select Date" />
+          <button type="button" class="user-book-delete-button" id="user-info-delete-button">X</button>
+        </div>
+        <div class="select-user-availability-container" id="customer-availability-container">
+        </div>
+        <div class="select-user-selection-container" id="customer-selection-container">
+        </div>
+        <button class="user-info-button" type="button" id="book-room-button">BOOK NOW</button>
+        <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
+      </article>`);
+      addDatePicker();
+  }
+}
+
+function addUserSelectedSpent(id) {
+  if (manager.user) {
+    addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+    $("#user-selector-container").empty();
+    $("#user-selector-container").append(`
+      <article class="today-info-article" id="user-info-article">
+        <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+        <h2 class="user-selected-spent-h2">Money Spent</h2>
+        <p class="user-selected-spent-p">$${manager.getUserTotalSpent(manager.user.id)}</p>
+      </article>
+    `);
+  }
+}
+
+function addTodayPercent() {
+  if (manager.user) {
+    addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+  }
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="today-percentage">
+      <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+      <p class="manager-today-p">Percentage Booked</p>
+      <p class="manager-today">${manager.getPercentageOccupancy(date)}%<p>
+    </article>`);
+}
+
+function addTodayRevenue() {
+  if (manager.user) {
+    addUserRoomBookings(manager, manager.user.id, "#user-selected-bookings");
+  }
+  $("#user-selector-container").empty();
+  $("#user-selector-container").append(`
+    <article class="today-info-article" id="today-revenue">
+      <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
+      <p class="manager-today-p">Revenue</p>
+      <p class="manager-today">$${manager.getRevenueToday(date)}<p>
+    </article>`);
 }
 
 function addloginHTML() {
@@ -327,19 +556,25 @@ function addloginHTML() {
 function addManagerHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
-    <header class="user-page-header">
-      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1 class="manager-header-h1">Silva</h1>
-      <input class="manager-user-search" type="text" id="user-names-input" list="user-names" placeholder="User Name Search" >
-      <datalist id="user-names"></datalist>
-      <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
-      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+    <header class="user-page-header manager" id="user-header">
+      <div class="manager-header-logo-container">
+        <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+        <h1 class="manager-header-h1">Silva</h1>
+      </div>
+      <form class="manager-header-form">
+        <input class="manager-user-search" list="user-names" id="name-selection" name="name-selection" placeholder="User Name Search" >
+        <button type="button" class="user-search-button" id="user-search-button">Search</button>
+      </form>
+      <div class="manager-header-date-container">
+        <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
+        <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      </div>
     </header>
     <main class="user-page-main">
       <section class="manager-section">
-        <article class="manager-section-article">
-          <h2 class="manager-section-header">User Name</h2>
-          <div class="user-booking-container" id="today-bookings">
+        <article class="manager-section-article" id="manager-selected-user">
+          <h2 class="manager-section-header" id="manager-section-user-name">User Name</h2>
+          <div class="user-booking-container" id="user-selected-bookings">
           </div>
           <div class="user-info-button-container">
             <button type="button" class="user-info-button" id="user-amount-button">Customer Amount Spent</button>
@@ -347,36 +582,38 @@ function addManagerHTML() {
             <button type="button" class="user-info-button" id="user-delete-button">Delete Customer Booking</button>
           </div>
         </article>
-        <article class="user-info-article">
-          <p>user info</p>
-        </article>
+      </section>
+      <section class="manager-section" id="user-selector-container">
       </section>
       <section class="manager-section">
-        <div class="today-info-container">
-          <article class="today-info-article" id="today-revenue">
-          </article>
-          <article class="today-info-article" id="today-percentage">
-          </article>
-        </div>
         <article class="manager-section-article">
           <h2 class="today-section-header">Current Availability</h2>
           <div class="today-booking-container" id="today-availability">
           </div>
+          <div class="user-info-button-container">
+            <button type="button" class="user-info-button" id="daily-revenue-button">Revenue</button>
+            <button type="button" class="user-info-button" id="daily-percent-button">Percent Booked</button>
+          </div>
         </article>
       </section>
     </main>
+    <datalist id="user-names"></datalist>
     `)
 }
 
 function addCustomerHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
-    <header class="user-page-header">
-      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1 class="manager-header-h1">Silva</h1>
-      <input class="manager-user-search" id="datepicker" placeholder="Select Date" />
-      <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
-      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+    <header class="user-page-header customer" id="user-header">
+      <div class="manager-header-logo-container">
+        <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+        <h1 class="manager-header-h1">Silva</h1>
+      </div>
+      <input class="customer-user-search" id="datepicker" placeholder="Select Date" />
+      <div class="manager-header-date-container">
+        <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
+        <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      </div>
     </header>
   <main class="user-page-main">
     <section class="customer-availability-section">
