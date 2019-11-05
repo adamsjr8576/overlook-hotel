@@ -170,7 +170,7 @@ function addUserRoomBookings(user, id, appendLocation) {
       </div>
       <div class="availability-room-info">
       <p>Booking Date: ${booking.date}</p>
-      <p>Confirmation #: ${booking.id}</p>
+      <p class="booking-id">Confirmation#: ${booking.id}</p>
       </div>
     </section>
     `);
@@ -188,7 +188,7 @@ function addUserRoomBookingsToDelete() {
       </div>
       <div class="availability-room-info">
         <p>Booking Date: ${booking.date}</p>
-        <p>Confirmation #: ${booking.id}</p>
+        <p class="booking-id">Confirmation#: ${booking.id}</p>
         <button type="button" class="user-info-button" id="user-booking-delete-button">Select</button>
       </div>
     </section>
@@ -341,6 +341,14 @@ function bookRoomCustomer() {
   });
 }
 
+$("body").on('click', "#delete-room-button", deleteBooking);
+
+function deleteBooking() {
+  // console.log($("#customer-selection-container").children().children().children('p.booking-id')[0].innerText)
+  let roomNumP = $("#customer-selection-container").children().children().children('p.booking-id')[0].innerText;
+  let roomNum = Number(roomNumP.split(' ')[1]);
+}
+
 function clearRoomSelected() {
   $("#customer-selection-container").empty();
 }
@@ -406,7 +414,7 @@ function addUserDeleteBooking() {
       <button type="button" class="user-info-delete-button" id="user-info-delete-button">X</button>
       <div class="select-user-selection-container" id="customer-selection-container">
       </div>
-      <button class="user-info-button" type="button" id="cancel-room-button">DELETE</button>
+      <button class="user-info-button" type="button" id="delete-room-button">DELETE</button>
       <button class="user-info-button" type="button" id="cancel-room-button">cancel</button>
     </article>
     `);
@@ -553,11 +561,15 @@ function addCustomerHTML() {
   $("#login-page-body").empty();
   $("#login-page-body").html(`
     <header class="user-page-header customer" id="user-header">
-      <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
-      <h1 class="manager-header-h1">Silva</h1>
+      <div class="manager-header-logo-container">
+        <img class="user-silva-logo" src="./images/silva-logo.png" alt="Silva logo">
+        <h1 class="manager-header-h1">Silva</h1>
+      </div>
       <input class="customer-user-search" id="datepicker" placeholder="Select Date" />
-      <h3 class="manager-header-date" id="manager-header-date">November 2, 2019</h3>
-      <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      <div class="manager-header-date-container">
+        <h3 class="manager-header-date" id="manager-header-date">${formattedDate}</h3>
+        <button type="button" class="user-header-logout" id="user-header-logout">Logout</button>
+      </div>
     </header>
   <main class="user-page-main">
     <section class="customer-availability-section">

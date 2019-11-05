@@ -205,7 +205,7 @@ form {
 .manager-header-date-container {
   display: flex;
   justify-content: space-between;
-  width: 50%;
+  width: 55%;
   align-items: center;
 }
 
@@ -541,11 +541,36 @@ form {
     width: 80%;
   }
 
-  .manager-section {
+  .customer-availability-section {
     width: 80%;
   }
 
-  .manager-section {
+  .customer-book-section {
     width: 80%;
   }
+
+  .customer-info-section {
+    width: 80%;
+  }
+
+  .customer-user-search {
+    width: 35%;
+  }
+
+  .user-silva-logo {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 605px) {
+.manager-header-date-container {
+  flex-direction: column;
+}
+
+.user-header-logout {
+  margin: 20px 0 0 0;
+  align-items: center;
+  justify-content: space-around;
+}
+
 }
