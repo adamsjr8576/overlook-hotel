@@ -44,7 +44,3 @@ Manager:
 
 Customer:
 ![Customer workflow](/src/images/customer.gif)
-
-
-
-If you _are_ done, you can follow [this procedure](./gh-pages-procedure.md) to get your project live on GitHub Pages.
