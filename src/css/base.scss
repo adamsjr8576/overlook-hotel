@@ -573,4 +573,17 @@ form {
   justify-content: space-around;
 }
 
+.login-input-section {
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-input-container {
+  width: 100%;
+}
+
+.login-submit-button {
+  width: 50%;
+}
+
 }
