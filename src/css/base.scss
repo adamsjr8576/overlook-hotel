@@ -9,8 +9,8 @@
 }
 
 %container-border {
-  border: 2px solid #283f42;
-  border-radius: 10px;
+  border: $border;
+  border-radius: $border-radius;
   width: 90%;
   overflow: auto;
 }
@@ -27,8 +27,8 @@
 
 %room-list-style {
   @extend %display-flex-column;
-  border: 2px solid #283f42;
-  border-radius: 10px;
+  border: $border;
+  border-radius: $border-radius;
   padding: 10px;
   width: 95%;
   margin: 5px 0;
@@ -103,9 +103,9 @@ form {
 
 
 .login-input {
-  font-size: 1em;
+  font-size: $test-font-size;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: $border-radius;
   border: 0;
   margin: 20px auto;
   width: 70%;
@@ -113,7 +113,7 @@ form {
 
 .login-submit-button {
   background-color: $login-text-color;
-  border-radius: 10px;
+  border-radius: $border-radius;
   border: 0;
   font-size: 1.5em;
   width: 25%;
@@ -186,7 +186,7 @@ form {
   padding: 10px;
   border: 0;
   outline: 0;
-  border-radius: 10px;
+  border-radius: $border-radius;
   width: 85%;
   font-size: $test-font-size;
 }
@@ -205,8 +205,8 @@ form {
 .manager-header-date-container {
   display: flex;
   justify-content: space-between;
-  width: 55%;
   align-items: center;
+  width: 55%;
 }
 
 .manager-header-date {
@@ -214,7 +214,7 @@ form {
   color: $login-text-color;
   padding: 5px;
   font-size: $sub-header-font-size;
-  border-radius: 10px;
+  border-radius: $border-radius;
   width: 75%;
   text-align: center;
 }
@@ -248,7 +248,7 @@ form {
   text-align: center;
   margin: 15px;
   width: 90%;
-  border-bottom: 2px solid #283f42;
+  border-bottom: $border;
 }
 
 .user-booking-container {
@@ -281,7 +281,7 @@ form {
 
 .user-selected-spent-h2 {
   padding: 10px;
-  border-bottom: 2px solid #283f42;
+  border-bottom: $border;
   width: 75%;
 }
 
@@ -314,9 +314,9 @@ form {
 .user-select-date {
   margin-top: 10px;
   padding: 10px;
-  border: 2px solid #283f42;
+  border: $border;
   outline: 0;
-  border-radius: 10px;
+  border-radius: $border-radius;
   width: 75%;
   font-size: $test-font-size;
 }
@@ -338,7 +338,7 @@ form {
   font-size: $sub-header-font-size;
   padding: 5px;
   width: 75%;
-  border-bottom: 2px solid #283f42;
+  border-bottom: $border;
 }
 
 .manager-today {
@@ -369,7 +369,7 @@ form {
   margin: 10px 0;
   width: 90%;
   padding: 10px;
-  border-bottom: 2px solid #283f42;
+  border-bottom: $border;
 }
 
 .customer-availability-container {
@@ -389,7 +389,7 @@ form {
   padding: 10px;
   border: 0;
   outline: 0;
-  border-radius: 10px;
+  border-radius: $border-radius;
   width: 18%;
   font-size: $test-font-size;
 }
@@ -445,7 +445,7 @@ form {
   text-align: center;
   font-size: $test-font-size;
   width: 80%;
-  border-bottom: 2px solid #283f42;
+  border-bottom: $border;
 }
 
 .dollars-spent {

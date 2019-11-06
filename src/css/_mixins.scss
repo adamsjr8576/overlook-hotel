@@ -8,14 +8,14 @@
 @mixin section-style($width) {
   width: $width;
   background-color: $login-text-color;
-  border-radius: 10px;
+  border-radius: $border-radius;
 }
 
 @mixin users-page-button($width, $margin) {
   width: $width;
   padding: 5px;
   font-size: $test-font-size;
-  border-radius: 10px;
+  border-radius: $border-radius;
   background-color: $secondary-background-color;
   color: $login-text-color;
   border: 0;
