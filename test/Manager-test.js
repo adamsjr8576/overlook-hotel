@@ -34,11 +34,22 @@ describe('Manager', () => {
   });
 
   it('should be able to find the revenue for any given day', function() {
-    expect(manager.getRevenueToday("2019/11/22")).to.equal(820.05);
+    expect(manager.getRevenueToday("2019/11/22")).to.equal(819);
   });
 
   it('should be able to find the percentage of rooms booked for any given day', function() {
-    expect(manager.getPercentageOccupancy("2019/11/22")).to.equal(30);
+    chai.spy.on(manager, 'getRoomsAvailableDay', () => {
+      return [
+        {
+          number: 5,
+          roomType: "single room",
+          bidet: true,
+          bedSize: "queen",
+          numBeds: 2,
+          costPerNight: 340.17
+        }];
+    });
+    expect(manager.getPercentageOccupancy("2019/11/22")).to.equal(90);
   });
 
   it('should be able to find the name of all users', function() {
