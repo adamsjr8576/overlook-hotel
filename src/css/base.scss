@@ -166,7 +166,7 @@ form {
 .manager-header-logo-container {
   width: 20%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -501,9 +501,7 @@ form {
   text-align: center;
 }
 
-@media screen and (max-width: 1400px) {
-
-}
+//Media Queries
 
 @media screen and (max-width: 1000px) {
   .user-page-header {
@@ -563,27 +561,56 @@ form {
 }
 
 @media screen and (max-width: 605px) {
-.manager-header-date-container {
-  flex-direction: column;
+
+  .manager-header-date-container {
+    flex-direction: column;
+  }
+
+  .user-header-logout {
+    margin: 20px 0 0 0;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .login-input-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-input-container {
+    width: 100%;
+  }
+
+  .login-submit-button {
+    width: 50%;
+  }
+
 }
 
-.user-header-logout {
-  margin: 20px 0 0 0;
-  align-items: center;
-  justify-content: space-around;
-}
+@media screen and (min-width: 1750px) {
 
-.login-input-section {
-  flex-direction: column;
-  align-items: center;
-}
+  .user-booking-container {
+    height: 562px;
+  }
 
-.login-input-container {
-  width: 100%;
-}
+  .select-user-availability-container {
+    height: 450px;
+  }
 
-.login-submit-button {
-  width: 50%;
-}
+  .select-user-selection-container {
+    height: 187px;
+  }
+
+  .today-booking-container {
+    height: 600px;
+  }
+
+  .customer-availability-container {
+    height: 637px;
+  }
+
+  .customer-selection-container{
+    height: 210px;
+  }
 
 }
