@@ -442,6 +442,7 @@ function addUserBookingsToDelete() {
 function userSearchHandler() {
   let userNames = manager.getAllUserNames();
   if ($("#name-selection").val().length > 0 && userNames.includes($("#name-selection").val())) {
+    $("#user-selector-container").empty();
     let userName = $("#name-selection").val();
     let customerSelected = createUser(userName);
     manager.getUserInfo(manager.users, customerSelected.user.id);
