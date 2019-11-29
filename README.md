@@ -1,5 +1,7 @@
 # Hotel Silva - Turing Mod 2 Solo Final Project
 
+https://adamsjr8576.github.io/overlook-hotel/
+
 ## Abstract
 
 The overarching goal of this project is to create a hotel management tool for both customers and hotel staff to manage bookings and total spent/revenue. The general set up of the site is to have both manager and customer arrive at the same landing page that contains a username and password login. Based on their login info, they will either be taking to the customer page or the manager page, which contains the interactions and functionality pertinent to the user.
